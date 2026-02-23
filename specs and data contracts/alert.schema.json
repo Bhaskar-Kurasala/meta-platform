@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/alert.schema.json",
+  "title": "Alert",
+  "description": "An alert generated from an anomaly detection, routed to users via configured channels.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "alert_id",
+    "anomaly_id",
+    "severity",
+    "channels",
+    "status",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version for forward/backward compatibility",
+      "example": "1.0"
+    },
+    "alert_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this alert"
+    },
+    "anomaly_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The anomaly that triggered this alert"
+    },
+    "asset_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The asset related to this alert"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Alert severity, inherited from the anomaly"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Short human-readable alert title"
+    },
+    "message": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Detailed alert message with context"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["dashboard", "email", "sms", "webhook", "slack"]
+      },
+      "minItems": 1,
+      "description": "Delivery channels for this alert"
+    },
+    "recipients": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "email"
+      },
+      "description": "Email recipients (for email/sms channels)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "sent", "partially_sent", "failed", "acknowledged", "resolved"],
+      "description": "Current alert delivery and response status"
+    },
+    "acknowledged_by": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "User who acknowledged this alert"
+    },
+    "acknowledged_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the alert was acknowledged"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the alert was created"
+    },
+    "sent_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the alert was successfully sent (null if not yet sent)"
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Number of delivery retry attempts"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additional context (e.g., escalation info, snooze settings)"
+    }
+  },
+  "additionalProperties": false
+}

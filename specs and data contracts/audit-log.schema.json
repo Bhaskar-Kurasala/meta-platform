@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/audit-log.schema.json",
+  "title": "AuditLogEntry",
+  "description": "Immutable audit log entry tracking all significant system actions. SOC2-aligned. These records are append-only and must never be modified or deleted.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "entry_id",
+    "actor",
+    "actor_type",
+    "action",
+    "resource_type",
+    "resource_id",
+    "timestamp"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "entry_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique, immutable identifier for this log entry"
+    },
+    "actor": {
+      "type": "string",
+      "description": "User ID, service name, or agent ID that performed the action"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": ["user", "system", "agent", "api_client"],
+      "description": "Type of actor for filtering and analysis"
+    },
+    "action": {
+      "type": "string",
+      "description": "Action performed (e.g., 'alert.acknowledged', 'prediction.reviewed', 'report.generated', 'user.login', 'threshold.updated')"
+    },
+    "resource_type": {
+      "type": "string",
+      "description": "Type of resource acted upon (e.g., 'alert', 'prediction', 'asset', 'user', 'mission')"
+    },
+    "resource_id": {
+      "type": "string",
+      "description": "ID of the resource acted upon"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Server-generated timestamp (never client-supplied)"
+    },
+    "ip_address": {
+      "type": ["string", "null"],
+      "description": "Source IP address of the request"
+    },
+    "user_agent": {
+      "type": ["string", "null"],
+      "description": "User agent string of the request"
+    },
+    "changes": {
+      "type": ["object", "null"],
+      "properties": {
+        "before": { "type": "object", "additionalProperties": true },
+        "after": { "type": "object", "additionalProperties": true }
+      },
+      "description": "Diff of what changed (for update/modify actions)"
+    },
+    "result": {
+      "type": "string",
+      "enum": ["success", "failure", "denied"],
+      "description": "Outcome of the action"
+    },
+    "failure_reason": {
+      "type": ["string", "null"],
+      "description": "Reason for failure or denial (null on success)"
+    },
+    "correlation_id": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Request correlation ID for distributed tracing"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additional context specific to the action type"
+    }
+  },
+  "additionalProperties": false
+}

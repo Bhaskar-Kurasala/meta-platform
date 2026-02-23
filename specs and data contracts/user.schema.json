@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/user.schema.json",
+  "title": "User",
+  "description": "Platform user account with RBAC role assignment. Roles must match the Access Control Matrix defined in BRD Section 4.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "user_id",
+    "email",
+    "role",
+    "is_active",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 255
+    },
+    "display_name": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "drone_operator",
+        "inspection_analyst",
+        "maintenance_manager",
+        "compliance_officer",
+        "executive_viewer",
+        "admin"
+      ],
+      "description": "RBAC role — must match BRD persona definitions and Access Control Matrix"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Soft-delete flag. Inactive users cannot authenticate."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "last_login": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "notification_preferences": {
+      "type": "object",
+      "properties": {
+        "email_enabled": { "type": "boolean", "default": true },
+        "sms_enabled": { "type": "boolean", "default": false },
+        "dashboard_enabled": { "type": "boolean", "default": true },
+        "quiet_hours": {
+          "type": ["object", "null"],
+          "properties": {
+            "start": { "type": "string", "pattern": "^\\d{2}:\\d{2}$", "description": "HH:MM in user's timezone" },
+            "end": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+            "timezone": { "type": "string", "description": "IANA timezone (e.g., 'America/Chicago')" }
+          }
+        }
+      },
+      "description": "User notification delivery preferences"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

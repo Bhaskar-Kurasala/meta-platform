@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/model-metrics.schema.json",
+  "title": "ModelMetrics",
+  "description": "Performance metrics snapshot for a specific model version. Used for promotion decisions, drift detection, and governance audit trail.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "metrics_id",
+    "model_version",
+    "evaluation_type",
+    "evaluated_at",
+    "metrics"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "metrics_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this metrics snapshot"
+    },
+    "model_version": {
+      "type": "string",
+      "description": "Semantic version of the model (e.g., 'v2.3.1')"
+    },
+    "model_name": {
+      "type": "string",
+      "description": "Name of the model (e.g., 'anomaly_detector_thermal', 'risk_predictor_v2')"
+    },
+    "evaluation_type": {
+      "type": "string",
+      "enum": ["training", "validation", "staging_shadow", "canary", "production", "manual_audit"],
+      "description": "Context in which these metrics were collected"
+    },
+    "dataset": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "size": { "type": "integer", "description": "Number of samples" },
+        "date_range": {
+          "type": "object",
+          "properties": {
+            "start": { "type": "string", "format": "date-time" },
+            "end": { "type": "string", "format": "date-time" }
+          }
+        }
+      },
+      "description": "Dataset used for this evaluation — provides data lineage"
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "precision": { "type": "number", "minimum": 0, "maximum": 1 },
+        "recall": { "type": "number", "minimum": 0, "maximum": 1 },
+        "f1": { "type": "number", "minimum": 0, "maximum": 1 },
+        "auc_roc": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "false_positive_rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "false_negative_rate": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "inference_latency_p50_ms": { "type": ["number", "null"], "minimum": 0 },
+        "inference_latency_p95_ms": { "type": ["number", "null"], "minimum": 0 },
+        "inference_latency_p99_ms": { "type": ["number", "null"], "minimum": 0 },
+        "data_drift_score": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Statistical distance between training and current input distributions (0 = identical, 1 = completely different)"
+        },
+        "prediction_distribution": {
+          "type": ["object", "null"],
+          "description": "Distribution of prediction outputs (e.g., severity breakdown) for bias detection",
+          "additionalProperties": { "type": "number" }
+        }
+      },
+      "description": "Core performance metrics"
+    },
+    "promotion_eligible": {
+      "type": "boolean",
+      "description": "Whether this model version meets minimum promotion criteria"
+    },
+    "promotion_blockers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of criteria not met (empty if promotion_eligible is true)"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evaluated_by": {
+      "type": "string",
+      "description": "User ID, 'system' for automated, or pipeline run ID"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "maxLength": 5000,
+      "description": "Human or automated commentary on results"
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "confusion_matrix_url": { "type": ["string", "null"], "format": "uri" },
+        "roc_curve_url": { "type": ["string", "null"], "format": "uri" },
+        "model_card_url": { "type": ["string", "null"], "format": "uri" }
+      },
+      "additionalProperties": true,
+      "description": "URLs to visualization artifacts and model card"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

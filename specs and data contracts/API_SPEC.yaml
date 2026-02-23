@@ -1,0 +1,1203 @@
+openapi: 3.0.3
+info:
+  title: Drone Inspection Analytics Platform API
+  description: |
+    API for the Drone Inspection Analytics Platform.
+    
+    **Authentication:**
+    - Drone/device endpoints use API key auth (X-API-Key header)
+    - Human user endpoints use Bearer JWT (OAuth 2.1)
+    
+    **Pagination:** All list endpoints use cursor-based pagination.
+    - `cursor` — opaque token from previous response
+    - `limit` — results per page (default: 50, max: 200)
+    - Response includes `next_cursor` (null if no more) and `has_more`
+    
+    **Rate Limits:** Per-role limits returned in headers:
+    - `X-RateLimit-Limit` — max requests per window
+    - `X-RateLimit-Remaining` — remaining in current window
+    - `X-RateLimit-Reset` — UTC epoch seconds when window resets
+    
+    **Schema Versioning:** All request/response bodies include `schema_version`.
+    Consumers must tolerate unknown fields. See schemas/ for full JSON Schema definitions.
+    
+    **Data Lineage:** Anomaly and Prediction responses include `source_event_ids`
+    for full audit trail from sensor reading → anomaly → prediction → alert → action.
+  version: "1.0.0"
+  contact:
+    name: Platform Engineering
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.example.com
+    description: Production
+  - url: https://api.staging.example.com
+    description: Staging
+  - url: http://localhost:8080
+    description: Local Development
+
+tags:
+  - name: Ingestion
+    description: Sensor data ingestion (device-facing)
+  - name: Anomalies
+    description: Anomaly detection results
+  - name: Predictions
+    description: Risk predictions and forecasting
+  - name: Missions
+    description: Drone mission management
+  - name: Alerts
+    description: Alert management and acknowledgment
+  - name: Reports
+    description: Compliance and analytics reports
+  - name: Maintenance
+    description: Maintenance action tracking
+  - name: Users
+    description: User management
+  - name: Models
+    description: ML model governance and metrics
+  - name: Health
+    description: System health checks
+
+# ─── Security Schemes ───────────────────────────────────────────────
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OAuth 2.1 JWT for human users. Access token lifetime 15 min, refresh token 7 days with rotation.
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Long-lived API key for drone/device ingestion endpoints. Rotatable via admin API.
+
+  # ─── Shared Parameters ──────────────────────────────────────────
+  parameters:
+    CursorParam:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Opaque pagination cursor from previous response
+    LimitParam:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 50
+        minimum: 1
+        maximum: 200
+      description: Results per page
+    AssetIdPath:
+      name: asset_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    MissionIdPath:
+      name: mission_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AlertIdPath:
+      name: alert_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  # ─── Shared Response Schemas ────────────────────────────────────
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, request_id]
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - PARSE_ERROR
+                - UNAUTHORIZED
+                - FORBIDDEN
+                - NOT_FOUND
+                - CONFLICT
+                - DOMAIN_ERROR
+                - RATE_LIMITED
+                - INTERNAL_ERROR
+            message:
+              type: string
+              description: Human-readable error description
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  issue:
+                    type: string
+            request_id:
+              type: string
+              description: Unique request ID for support/debugging
+
+    PaginationMeta:
+      type: object
+      properties:
+        next_cursor:
+          type: ["string", "null"]
+          description: Cursor for next page (null if no more results)
+        has_more:
+          type: boolean
+        total_count:
+          type: integer
+          description: Total matching records (omitted for expensive queries)
+
+    # ─── Domain Schemas (inline summaries, full definitions in schemas/*.json) ──
+
+    SensorReading:
+      type: object
+      description: "Full schema: schemas/sensor-reading.schema.json"
+      required: [schema_version, reading_id, mission_id, sensor_type, value, unit, timestamp]
+      properties:
+        schema_version:
+          type: string
+          example: "1.0"
+        reading_id:
+          type: string
+          format: uuid
+        mission_id:
+          type: string
+          format: uuid
+        asset_id:
+          type: string
+          format: uuid
+        sensor_type:
+          type: string
+          enum: [thermal, vibration, ultrasonic, visual, gas, pressure, humidity]
+        value:
+          type: number
+        unit:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        gps:
+          type: object
+          properties:
+            lat: { type: number }
+            lng: { type: number }
+            altitude_m: { type: number }
+        metadata:
+          type: object
+          additionalProperties: true
+
+    AnomalyEvent:
+      type: object
+      description: "Full schema: schemas/anomaly-event.schema.json"
+      required: [schema_version, anomaly_id, asset_id, anomaly_type, severity, confidence, detected_at, source_event_ids]
+      properties:
+        schema_version:
+          type: string
+        anomaly_id:
+          type: string
+          format: uuid
+        asset_id:
+          type: string
+          format: uuid
+        anomaly_type:
+          type: string
+          enum: [corrosion, crack, leak, thermal_hotspot, vibration_anomaly, pressure_deviation, unknown]
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        model_version:
+          type: string
+        detected_at:
+          type: string
+          format: date-time
+        source_event_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: "DATA LINEAGE: IDs of the sensor readings that contributed to this anomaly detection"
+        data_lineage:
+          type: object
+          properties:
+            pipeline_run_id:
+              type: string
+              format: uuid
+            model_version:
+              type: string
+            detection_timestamp:
+              type: string
+              format: date-time
+          description: "Provenance metadata for audit trail"
+        requires_review:
+          type: boolean
+          description: "True if confidence < HITL threshold — routed to review queue"
+        metadata:
+          type: object
+          additionalProperties: true
+
+    RiskPrediction:
+      type: object
+      description: "Full schema: schemas/risk-prediction.schema.json"
+      required: [schema_version, prediction_id, asset_id, risk_score, predicted_at, source_event_ids]
+      properties:
+        schema_version:
+          type: string
+        prediction_id:
+          type: string
+          format: uuid
+        asset_id:
+          type: string
+          format: uuid
+        risk_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        risk_category:
+          type: string
+          enum: [minimal, low, moderate, high, critical]
+        failure_mode:
+          type: string
+        predicted_failure_window:
+          type: object
+          properties:
+            earliest: { type: string, format: date-time }
+            latest: { type: string, format: date-time }
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        model_version:
+          type: string
+        predicted_at:
+          type: string
+          format: date-time
+        source_event_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: "DATA LINEAGE: IDs of anomalies and readings that fed this prediction"
+        recommended_action:
+          type: string
+        explanation:
+          type: object
+          properties:
+            summary:
+              type: string
+              description: "Natural language explanation of the prediction"
+            feature_importance:
+              type: array
+              items:
+                type: object
+                properties:
+                  feature: { type: string }
+                  weight: { type: number }
+          description: "Explainability output for human review"
+        metadata:
+          type: object
+          additionalProperties: true
+
+    Alert:
+      type: object
+      description: "Full schema: schemas/alert.schema.json"
+      required: [schema_version, alert_id, anomaly_id, severity, channels, status, created_at]
+      properties:
+        schema_version:
+          type: string
+        alert_id:
+          type: string
+          format: uuid
+        anomaly_id:
+          type: string
+          format: uuid
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        title:
+          type: string
+        message:
+          type: string
+        channels:
+          type: array
+          items:
+            type: string
+            enum: [dashboard, email, sms, webhook, slack]
+        status:
+          type: string
+          enum: [queued, sent, partially_sent, failed, acknowledged, resolved]
+        created_at:
+          type: string
+          format: date-time
+
+    Mission:
+      type: object
+      description: "Full schema: schemas/mission.schema.json"
+      required: [schema_version, mission_id, asset_id, status, created_at]
+      properties:
+        schema_version:
+          type: string
+        mission_id:
+          type: string
+          format: uuid
+        asset_id:
+          type: string
+          format: uuid
+        operator_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [planned, in_progress, completed, aborted, failed]
+        flight_path:
+          type: array
+          items:
+            type: object
+            properties:
+              lat: { type: number }
+              lng: { type: number }
+              altitude_m: { type: number }
+              timestamp: { type: string, format: date-time }
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+  # ─── Shared Responses ──────────────────────────────────────────
+  responses:
+    BadRequest:
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: "sensor_type is required"
+              details:
+                - field: sensor_type
+                  issue: "Field is required"
+              request_id: "req_abc123"
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Authenticated but insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Duplicate or conflicting state
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until rate limit resets
+
+# ═══════════════════════════════════════════════════════════════════
+# PATHS
+# ═══════════════════════════════════════════════════════════════════
+
+paths:
+
+  # ─── Health ─────────────────────────────────────────────────────
+  /health:
+    get:
+      tags: [Health]
+      summary: System health check
+      security: []
+      operationId: getHealth
+      responses:
+        '200':
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, enum: [healthy, degraded, unhealthy] }
+                  version: { type: string }
+                  timestamp: { type: string, format: date-time }
+                  checks:
+                    type: object
+                    properties:
+                      database: { type: string, enum: [up, down] }
+                      message_queue: { type: string, enum: [up, down] }
+                      ml_service: { type: string, enum: [up, down, degraded] }
+
+  # ─── Ingestion ──────────────────────────────────────────────────
+  /api/v1/readings:
+    post:
+      tags: [Ingestion]
+      summary: Ingest a sensor reading
+      description: |
+        Accepts a single sensor reading from a drone device.
+        Idempotent on `reading_id` — duplicate submissions return 409.
+      operationId: ingestReading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SensorReading'
+      responses:
+        '201':
+          description: Reading accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reading_id: { type: string, format: uuid }
+                  accepted_at: { type: string, format: date-time }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          description: Valid JSON but violates domain rules (e.g., future timestamp)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /api/v1/readings/batch:
+    post:
+      tags: [Ingestion]
+      summary: Ingest a batch of sensor readings
+      description: |
+        Accepts up to 500 readings in a single request.
+        Returns per-item status. Partial success is possible.
+      operationId: ingestReadingsBatch
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [readings]
+              properties:
+                readings:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SensorReading'
+                  minItems: 1
+                  maxItems: 500
+      responses:
+        '207':
+          description: Multi-status (some may have failed)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accepted: { type: integer }
+                  rejected: { type: integer }
+                  duplicates: { type: integer }
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index: { type: integer }
+                        reading_id: { type: string }
+                        error: { $ref: '#/components/schemas/Error' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  # ─── Anomalies ──────────────────────────────────────────────────
+  /api/v1/anomalies:
+    get:
+      tags: [Anomalies]
+      summary: List anomalies
+      description: Returns paginated anomaly events with optional filters.
+      operationId: listAnomalies
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: asset_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: severity
+          in: query
+          schema: { type: string, enum: [low, medium, high, critical] }
+        - name: since
+          in: query
+          schema: { type: string, format: date-time }
+          description: Filter anomalies detected after this timestamp
+        - name: requires_review
+          in: query
+          schema: { type: boolean }
+          description: Filter to only HITL review queue items
+      responses:
+        '200':
+          description: Paginated list of anomalies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AnomalyEvent'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/anomalies/{anomaly_id}:
+    get:
+      tags: [Anomalies]
+      summary: Get anomaly details
+      operationId: getAnomaly
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: anomaly_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Anomaly details with full data lineage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnomalyEvent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/anomalies/{anomaly_id}/review:
+    post:
+      tags: [Anomalies]
+      summary: Submit HITL review decision for an anomaly
+      description: |
+        Used by analysts to approve, reject, or relabel low-confidence anomalies.
+        Reviewer decisions feed back into model retraining pipeline.
+      operationId: reviewAnomaly
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: anomaly_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision:
+                  type: string
+                  enum: [approve, reject, relabel, escalate]
+                relabel_to:
+                  type: string
+                  description: New anomaly_type if decision is 'relabel'
+                notes:
+                  type: string
+                  maxLength: 2000
+      responses:
+        '200':
+          description: Review recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  anomaly_id: { type: string }
+                  decision: { type: string }
+                  reviewed_by: { type: string }
+                  reviewed_at: { type: string, format: date-time }
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: Anomaly not in review queue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ─── Predictions ────────────────────────────────────────────────
+  /api/v1/predictions:
+    get:
+      tags: [Predictions]
+      summary: List risk predictions
+      operationId: listPredictions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: asset_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: min_risk_score
+          in: query
+          schema: { type: number, minimum: 0, maximum: 100 }
+        - name: risk_category
+          in: query
+          schema: { type: string, enum: [minimal, low, moderate, high, critical] }
+      responses:
+        '200':
+          description: Paginated predictions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RiskPrediction'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/predictions/{asset_id}/latest:
+    get:
+      tags: [Predictions]
+      summary: Get latest risk prediction for an asset
+      operationId: getLatestPrediction
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/AssetIdPath'
+      responses:
+        '200':
+          description: Latest prediction with full lineage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskPrediction'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Missions ───────────────────────────────────────────────────
+  /api/v1/missions:
+    get:
+      tags: [Missions]
+      summary: List missions
+      operationId: listMissions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: asset_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: status
+          in: query
+          schema: { type: string, enum: [planned, in_progress, completed, aborted, failed] }
+      responses:
+        '200':
+          description: Paginated missions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mission'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+    post:
+      tags: [Missions]
+      summary: Create a new mission
+      operationId: createMission
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [asset_id, planned_path]
+              properties:
+                asset_id: { type: string, format: uuid }
+                planned_path:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      lat: { type: number }
+                      lng: { type: number }
+                      altitude_m: { type: number }
+                notes: { type: string }
+      responses:
+        '201':
+          description: Mission created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/v1/missions/{mission_id}:
+    get:
+      tags: [Missions]
+      summary: Get mission details
+      operationId: getMission
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MissionIdPath'
+      responses:
+        '200':
+          description: Mission details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Alerts ─────────────────────────────────────────────────────
+  /api/v1/alerts:
+    get:
+      tags: [Alerts]
+      summary: List alerts
+      operationId: listAlerts
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: severity
+          in: query
+          schema: { type: string, enum: [low, medium, high, critical] }
+        - name: status
+          in: query
+          schema: { type: string, enum: [queued, sent, partially_sent, failed, acknowledged, resolved] }
+        - name: since
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: Paginated alerts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/alerts/{alert_id}/acknowledge:
+    post:
+      tags: [Alerts]
+      summary: Acknowledge an alert
+      description: |
+        Idempotent on `alert_id + user_id`. Duplicate acknowledgments return 200 with existing data.
+      operationId: acknowledgeAlert
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/AlertIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  maxLength: 1000
+                  description: Optional acknowledgment notes
+      responses:
+        '200':
+          description: Alert acknowledged
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alert_id: { type: string }
+                  acknowledged_by: { type: string }
+                  acknowledged_at: { type: string, format: date-time }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Reports ────────────────────────────────────────────────────
+  /api/v1/reports:
+    get:
+      tags: [Reports]
+      summary: List reports
+      operationId: listReports
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: report_type
+          in: query
+          schema: { type: string, enum: [audit, periodic, incident, ad_hoc, compliance, asset_lifecycle] }
+      responses:
+        '200':
+          description: Paginated reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: "See schemas/report.schema.json"
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+    post:
+      tags: [Reports]
+      summary: Request report generation
+      description: Report generation is async. Returns immediately with status 'generating'.
+      operationId: requestReport
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [report_type, date_range]
+              properties:
+                report_type: { type: string, enum: [audit, periodic, incident, ad_hoc, compliance, asset_lifecycle] }
+                asset_ids:
+                  type: array
+                  items: { type: string, format: uuid }
+                  description: Empty for system-wide reports
+                date_range:
+                  type: object
+                  required: [start, end]
+                  properties:
+                    start: { type: string, format: date-time }
+                    end: { type: string, format: date-time }
+                format: { type: string, enum: [pdf, csv, xlsx], default: pdf }
+      responses:
+        '202':
+          description: Report generation started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  report_id: { type: string, format: uuid }
+                  status: { type: string, enum: [generating] }
+                  estimated_completion: { type: string, format: date-time }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/v1/reports/{report_id}:
+    get:
+      tags: [Reports]
+      summary: Get report status and download URL
+      operationId: getReport
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: report_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Report details (includes download URL when completed)
+          content:
+            application/json:
+              schema:
+                type: object
+                description: "See schemas/report.schema.json"
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Maintenance ────────────────────────────────────────────────
+  /api/v1/maintenance:
+    get:
+      tags: [Maintenance]
+      summary: List maintenance actions
+      operationId: listMaintenanceActions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: asset_id
+          in: query
+          schema: { type: string, format: uuid }
+        - name: status
+          in: query
+          schema: { type: string, enum: [requested, approved, scheduled, in_progress, completed, cancelled, rejected] }
+        - name: priority
+          in: query
+          schema: { type: string, enum: [low, medium, high, critical] }
+      responses:
+        '200':
+          description: Paginated maintenance actions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: "See schemas/maintenance-action.schema.json"
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+    post:
+      tags: [Maintenance]
+      summary: Request a maintenance action
+      operationId: createMaintenanceAction
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [asset_id, title, priority]
+              properties:
+                asset_id: { type: string, format: uuid }
+                title: { type: string, maxLength: 255 }
+                description: { type: string, maxLength: 5000 }
+                priority: { type: string, enum: [low, medium, high, critical] }
+                triggered_by:
+                  type: object
+                  properties:
+                    type: { type: string, enum: [anomaly, prediction, manual, scheduled] }
+                    source_id: { type: string, format: uuid }
+      responses:
+        '201':
+          description: Maintenance action created
+          content:
+            application/json:
+              schema:
+                type: object
+                description: "See schemas/maintenance-action.schema.json"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ─── Model Governance ──────────────────────────────────────────
+  /api/v1/models/{model_name}/metrics:
+    get:
+      tags: [Models]
+      summary: List metrics history for a model
+      operationId: listModelMetrics
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: model_name
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: evaluation_type
+          in: query
+          schema: { type: string, enum: [training, validation, staging_shadow, canary, production, manual_audit] }
+      responses:
+        '200':
+          description: Paginated model metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: "See schemas/model-metrics.schema.json"
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/models/{model_name}/metrics/latest:
+    get:
+      tags: [Models]
+      summary: Get latest production metrics for a model
+      operationId: getLatestModelMetrics
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: model_name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Latest metrics snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                description: "See schemas/model-metrics.schema.json"
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ─── Users ──────────────────────────────────────────────────────
+  /api/v1/users/me:
+    get:
+      tags: [Users]
+      summary: Get current user profile
+      operationId: getCurrentUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                type: object
+                description: "See schemas/user.schema.json"
+
+  # ─── Audit Logs ────────────────────────────────────────────────
+  /api/v1/audit-logs:
+    get:
+      tags: [Users]
+      summary: Query audit logs
+      description: |
+        Immutable audit trail. Only compliance_officer and admin roles can access.
+        Results always sorted by timestamp descending.
+      operationId: queryAuditLogs
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CursorParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: actor
+          in: query
+          schema: { type: string }
+        - name: action
+          in: query
+          schema: { type: string }
+        - name: resource_type
+          in: query
+          schema: { type: string }
+        - name: since
+          in: query
+          schema: { type: string, format: date-time }
+        - name: until
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: Paginated audit log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      description: "See schemas/audit-log.schema.json"
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ─── WebSocket (Real-time) ─────────────────────────────────────
+  /ws/v1/live:
+    get:
+      tags: [Anomalies, Alerts]
+      summary: Real-time anomaly and alert stream (WebSocket)
+      description: |
+        WebSocket endpoint for real-time dashboard updates.
+        Authentication via JWT query parameter: `/ws/v1/live?token=<jwt>`
+        
+        **Messages sent by server:**
+        - `{ "type": "anomaly", "data": <AnomalyEvent> }`
+        - `{ "type": "alert", "data": <Alert> }`
+        - `{ "type": "prediction", "data": <RiskPrediction> }`
+        - `{ "type": "heartbeat", "timestamp": "<ISO-8601>" }`
+        
+        Heartbeat sent every 30 seconds. Client should reconnect if no message received in 60 seconds.
+      operationId: liveStream
+      security:
+        - BearerAuth: []
+      responses:
+        '101':
+          description: WebSocket upgrade successful

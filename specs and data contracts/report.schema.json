@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/report.schema.json",
+  "title": "ComplianceReport",
+  "description": "A generated compliance, audit, or analytics report exportable as PDF/CSV.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "report_type",
+    "status",
+    "generated_at",
+    "generated_by"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "report_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": ["audit", "periodic", "incident", "ad_hoc", "compliance", "asset_lifecycle"],
+      "description": "Category of report"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Executive summary of report contents"
+    },
+    "asset_ids": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "description": "Assets covered by this report (empty for system-wide reports)"
+    },
+    "date_range": {
+      "type": "object",
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      },
+      "required": ["start", "end"],
+      "description": "Time period covered by this report"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["generating", "completed", "failed"],
+      "description": "Report generation status"
+    },
+    "format": {
+      "type": "string",
+      "enum": ["pdf", "csv", "xlsx"],
+      "default": "pdf"
+    },
+    "report_url": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Download URL (null while generating)"
+    },
+    "file_size_bytes": {
+      "type": ["integer", "null"],
+      "description": "File size in bytes (null while generating)"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generated_by": {
+      "type": "string",
+      "description": "User ID or 'system' for scheduled reports"
+    },
+    "expires_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the download link expires (null for permanent)"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
