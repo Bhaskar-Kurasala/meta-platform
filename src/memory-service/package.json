@@ -1,0 +1,28 @@
+{
+  "name": "@dap/memory-service",
+  "version": "1.0.0",
+  "description": "Layer 5: Memory Service with 6-layer architecture",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "ioredis": "^5.3.0",
+    "pg": "^8.11.0",
+    "pgvector": "^0.1.0",
+    "neo4j-driver": "^5.15.0",
+    "nats": "^2.20.0",
+    "yaml": "^2.3.0",
+    "protobufjs": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.0",
+    "typescript": "^5.3.0",
+    "tsx": "^4.7.0",
+    "vitest": "^1.2.0"
+  }
+}
