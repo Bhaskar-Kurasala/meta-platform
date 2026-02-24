@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ IMPORTANT: Source of Truth
+
+**These are the ONLY files to use for development:**
+
+| File | Purpose |
+|------|---------|
+| `ARCHITECTURE_v3_FINAL.md` | Complete implementation architecture (2000+ lines) |
+| `PROJECT_INSTRUCTIONS.md` | Development methodology, phase gates, quality standards |
+| `specs and data contracts/*.json` | JSON schemas for events, alerts, etc. |
+
+**DO NOT READ from `archive_research/` folder** - these are obsolete files from previous research iterations. They are kept only for reference but are NOT the source of truth.
+
 ## Project Status
 
 This is a **new project** in bootstrap phase. No production code has been written yet.

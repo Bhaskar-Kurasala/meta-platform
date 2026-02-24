@@ -1,0 +1,33 @@
+# Deep Agent Platform - Git Ignore
+
+# Archive folder - research/learning artifacts from previous iterations
+# These files are kept for reference but are NOT the source of truth
+archive_research/
+
+# Excalidraw cloned repo (used only for diagram editing)
+excalidraw/
+
+# Temporary files
+*.log
+*.tmp
+*.pyc
+generate_enhanced_excalidraw.py
+
+# Image files (diagrams in ARCHITECTURE_v3_FINAL.md are the source of truth)
+*.png
+*.excalidraw
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
