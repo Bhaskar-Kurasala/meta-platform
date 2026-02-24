@@ -1,0 +1,82 @@
+# Agent 01 - Customer Discovery Manifest
+#
+# Agent responsible for customer research, needs gathering, and pain point identification.
+
+agent_id: "agent-01-customer-discovery"
+name: "Customer Discovery Specialist"
+role: "Customer Research"
+layer: 1
+version: "1.0.0"
+
+description: |
+  Specialized agent for customer research, needs gathering, and pain point identification.
+  Conducts customer interviews, analyzes feedback, creates customer personas, and validates
+  problem statements with real evidence.
+
+capabilities:
+  - customer-research       # Research target customers and markets
+  - needs-gathering         # Identify customer needs and requirements
+  - pain-point-identification  # Discover and document customer pain points
+  - persona-creation        # Create detailed customer personas
+  - problem-validation      # Validate problems with real evidence
+  - icp-definition          # Define Ideal Customer Profile
+  - interview-synthesis     # Synthesize insights from customer interactions
+
+# Token budget for this agent
+token_budget:
+  input: 80000
+  output: 60000
+
+# Maximum concurrent tasks this agent can handle
+max_concurrent_tasks: 5
+
+# Agent permissions - what resources this agent can access
+permissions:
+  - resource: "customer:*"
+    actions: ["read", "write"]
+  - resource: "persona:*"
+    actions: ["read", "write"]
+  - resource: "feedback:*"
+    actions: ["read"]
+  - resource: "analytics:*"
+    actions: ["read"]
+  - resource: "artifact:*"
+    actions: ["write"]
+  - resource: "crm:*"
+    actions: ["read"]
+
+# Timeout and retry configuration
+timeout: 180000  # 3 minutes for research tasks
+max_retries: 2
+retry_delay_ms: 3000
+
+# Invariants - non-negotiable rules (see invariants.yaml)
+invariants:
+  - "MUST_validate_with_evidence"
+  - "MUST_avoid_assumption_bias"
+  - "MUST_document_sources"
+  - "NEVER_invent_customer_data"
+
+# Dependencies on other agents/services
+dependencies:
+  services:
+    - "memory-service"         # Store customer insights
+    - "event-bus"              # Publish findings
+  agents:
+    - "agent-00-orchestrator"   # For workflow coordination
+
+# Event subscriptions - what events this agent listens to
+event_subscriptions:
+  - "workflow.customer-discovery.started"
+  - "agent.00.requires-research"
+
+# Event publications - what events this agent emits
+event_pubs:
+  - "agent.01.customer-insights"
+  - "agent.01.persona-created"
+  - "agent.01.pain-points-identified"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

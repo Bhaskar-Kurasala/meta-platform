@@ -1,0 +1,75 @@
+# Agent 32 - Governance Manifest
+#
+# Agent responsible for policy enforcement, audit, and compliance.
+
+agent_id: "agent-32-governance"
+name: "Agent Governance"
+role: "Legal, Docs & Governance"
+layer: 8
+version: "1.0.0"
+
+description: |
+  Specialized agent for agent quality scoring, prompt versioning, evaluation,
+  policy enforcement, and system governance.
+
+capabilities:
+  - quality-scoring      # Score agent outputs
+  - prompt-versioning   # Manage prompt versions
+  - evaluation          # Evaluate agent performance
+  - policy-enforcement  # Enforce platform policies
+  - audit-trail        # Maintain audit records
+
+# Token budget
+token_budget:
+  input: 120000
+  output: 100000
+
+# Max concurrent tasks
+max_concurrent_tasks: 4
+
+# Permissions
+permissions:
+  - resource: "eval:*"
+    actions: ["read", "write"]
+  - resource: "prompts:*"
+    actions: ["read", "write"]
+  - resource: "token-tracker:*"
+    actions: ["read"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_maintain_evaluation_consistency"
+  - "MUST_track_all_evaluations"
+  - "MUST_enforce_quality_thresholds"
+  - "MUST_version_prompts"
+  - "MUST_report_violations"
+  - "MUST_maintain_audit_trail"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-30-legal"
+
+# Events
+event_subscriptions:
+  - "agent.completed"
+  - "evaluation.requested"
+  - "policy.violation"
+
+event_pubs:
+  - "agent.32.evaluation-complete"
+  - "agent.32.quality-score"
+  - "agent.32.policy-violation"
+  - "agent.32.audit-logged"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

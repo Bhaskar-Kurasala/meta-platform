@@ -1,0 +1,104 @@
+# Agent 30 - Legal Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Human Approval Required
+  # ============================================================================
+
+  - id: "MUST_always_require_human_approval"
+    name: "Always Require Human Approval"
+    description: |
+      Legal matters MUST always require human approval:
+      - No auto-approval of contracts
+      - No auto-sending of legal communications
+      - Human sign-off required
+      - Review by qualified attorney
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Risk Flagging
+  # ============================================================================
+
+  - id: "MUST_flag_legal_risks"
+    name: "Flag Legal Risks"
+    description: |
+      Legal risks MUST be flagged immediately:
+      - High-risk clauses identified
+      - Compliance gaps noted
+      - Liability exposure assessed
+      - Recommended actions provided
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # GDPR Compliance
+  # ============================================================================
+
+  - id: "MUST_comply_with_gdpr"
+    name: "Comply With GDPR"
+    description: |
+      GDPR requirements MUST be followed:
+      - Data processing agreements
+      - Privacy policy compliance
+      - Consent mechanisms
+      - Data subject rights
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Confidentiality
+  # ============================================================================
+
+  - id: "MUST_maintain_confidentiality"
+    name: "Maintain Confidentiality"
+    description: |
+      Legal confidentiality MUST be maintained:
+      - Attorney-client privilege
+      - Confidential information protected
+      - NDA compliance
+      - Access controls
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Escalation
+  # ============================================================================
+
+  - id: "MUST_escalate_complex_issues"
+    name: "Escalate Complex Issues"
+    description: |
+      Complex legal issues MUST be escalated:
+      - Novel legal questions
+      - High-value contracts
+      - Regulatory changes
+      - Litigation risks
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Not Legal Advice
+  # ============================================================================
+
+  - id: "MUST_not_provide_legal_advice"
+    name: "Not Provide Legal Advice"
+    description: |
+      This agent does NOT provide legal advice:
+      - Information only, not counsel
+      - Recommend attorney review
+      - Cannot represent company
+      - Clear disclaimers required
+    severity: "error"
+    enforcement: "always"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

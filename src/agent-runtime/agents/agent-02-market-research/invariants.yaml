@@ -1,0 +1,105 @@
+# Agent 02 - Market Research Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Source Attribution
+  # ============================================================================
+
+  - id: "MUST_cite_market_sources"
+    name: "Cite All Market Data Sources"
+    description: |
+      All market statistics and data points MUST cite sources:
+      - Industry reports (Gartner, Forrester, IDC, etc.)
+      - Government data (Census, BLS)
+      - Academic research
+      - Company filings (10-K, IPO prospectuses)
+      - Verified third-party research
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Estimation Integrity
+  # ============================================================================
+
+  - id: "MUST_use_conservative_estimates"
+    name: "Use Conservative Market Estimates"
+    description: |
+      Market sizing MUST use conservative assumptions:
+      - Prefer low-end estimates from credible sources
+      - Apply discount factors for market uncertainty
+      - Clearly state assumption ranges
+      - Never present best-case as expected case
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Methodology Transparency
+  # ============================================================================
+
+  - id: "MUST_disclose_methodology"
+    name: "Disclose Market Analysis Methodology"
+    description: |
+      All market analyses MUST disclose:
+      - Data sources used
+      - Time period of data
+      - Calculation methods for TAM/SAM/SOM
+      - Key assumptions made
+      - Confidence intervals
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Market Integrity
+  # ============================================================================
+
+  - id: "NEVER_overstate_market_size"
+    name: "Never Overstate Market Size"
+    description: |
+      Strict prohibition on inflating market size:
+      - Never use theoretical maximum as base
+      - Never ignore market saturation factors
+      - Never use idealized growth rates
+      - Must account for competitive dynamics
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Currency
+  # ============================================================================
+
+  - id: "MUST_use_recent_data"
+    name: "Use Recent Market Data"
+    description: |
+      Market data MUST be recent:
+      - Maximum 24 months old for quantitative data
+      - Clearly state data vintage
+      - Adjust historical data for inflation/trends
+      - Flag outdated data points
+    severity: "warning"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Conflicts of Interest
+  # ============================================================================
+
+  - id: "MUST_disclose_potential_bias"
+    name: "Disclose Potential Sources of Bias"
+    description: |
+      If using vendor-provided data:
+      - Disclose vendor relationship
+      - Cross-reference with independent sources
+      - Note any conflicts of interest
+    severity: "warning"
+    enforcement: "pre_output"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

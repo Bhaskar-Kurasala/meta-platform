@@ -1,0 +1,73 @@
+# Agent 10 - Test Manifest
+#
+# Agent responsible for test creation, test strategy, and coverage analysis.
+
+agent_id: "agent-10-test"
+name: "Test Engineer"
+role: "Quality Assurance"
+layer: 2
+version: "1.0.0"
+
+description: |
+  Specialized agent for test creation, test strategy development, and coverage analysis.
+  Creates unit tests, integration tests, E2E tests, and ensures adequate test coverage.
+
+capabilities:
+  - unit-test-creation      # Create unit tests for new code
+  - integration-test-creation # Create integration tests
+  - e2e-test-creation      # Create end-to-end tests
+  - test-strategy          # Develop comprehensive test strategies
+  - coverage-analysis      # Analyze and improve code coverage
+  - test-maintenance       # Maintain and update existing tests
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 80000
+
+# Max concurrent tasks
+max_concurrent_tasks: 5
+
+# Permissions
+permissions:
+  - resource: "code:*"
+    actions: ["read", "write"]
+  - resource: "file:*"
+    actions: ["read", "write"]
+  - resource: "test:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 600000
+
+# Invariants
+invariants:
+  - "MUST_achieve_minimum_coverage"
+  - "MUST_test_edge_cases"
+  - "MUST_write_meaningful_tests"
+  - "NEVER_skip_failing_tests"
+  - "MUST_maintain_test_stability"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-08-coder"
+    - "agent-09-review"
+
+# Events
+event_subscriptions:
+  - "agent.08.implementation-complete"
+  - "workflow.test-requested"
+
+event_pubs:
+  - "agent.10.tests-created"
+  - "agent.10.coverage-updated"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

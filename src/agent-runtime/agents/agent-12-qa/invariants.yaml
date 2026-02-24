@@ -1,0 +1,93 @@
+# Agent 12 - QA Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Test Requirements
+  # ============================================================================
+
+  - id: "MUST_pass_smoke_tests"
+    name: "Pass Smoke Tests"
+    description: |
+      Smoke tests MUST pass before any release:
+      - Core functionality works
+      - No crashes or hangs
+      - API endpoints respond
+      - Database connections work
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "MUST_verify_regression_suite"
+    name: "Verify Regression Suite"
+    description: |
+      Regression test suite MUST be verified:
+      - All existing tests pass
+      - No new failures introduced
+      - Previous bugs remain fixed
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "NEVER_skip_failing_tests"
+    name: "Never Skip Failing Tests"
+    description: |
+      Skipping tests is prohibited:
+      - Do not mark tests as skipped
+      - Do not comment out assertions
+      - Fix root cause of failures
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Stability
+  # ============================================================================
+
+  - id: "MUST_achieve_test_stability"
+    name: "Achieve Test Stability"
+    description: |
+      Tests MUST be stable:
+      - No flaky tests (pass rate >= 99%)
+      - Tests are isolated
+      - External dependencies mocked
+      - Deterministic results
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Release Validation
+  # ============================================================================
+
+  - id: "MUST_validate_release_criteria"
+    name: "Validate Release Criteria"
+    description: |
+      Release criteria MUST be validated:
+      - All blockers resolved
+      - Security scan passed
+      - Performance benchmarks met
+      - Documentation updated
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Performance
+  # ============================================================================
+
+  - id: "MUST_meet_performance_targets"
+    name: "Meet Performance Targets"
+    description: |
+      Performance targets MUST be met:
+      - Response time < 200ms
+      - Throughput >= 1000 req/s
+      - Error rate < 0.1%
+    severity: "warning"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

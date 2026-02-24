@@ -1,0 +1,96 @@
+# Agent 15 - Incident Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Response Requirements
+  # ============================================================================
+
+  - id: "MUST_respond_to_incidents"
+    name: "Respond to Incidents"
+    description: |
+      Incidents MUST be responded to within SLA:
+      - P1: Acknowledge within 5 minutes
+      - P2: Acknowledge within 15 minutes
+      - P3: Acknowledge within 1 hour
+      - P4: Acknowledge within 4 hours
+    severity: "error"
+    enforcement: "continuous"
+
+  - id: "MUST_escalate_unresolved"
+    name: "Escalate Unresolved Issues"
+    description: |
+      Unresolved incidents MUST be escalated:
+      - P1: Escalate after 30 minutes
+      - P2: Escalate after 1 hour
+      - P3: Escalate after 4 hours
+      - Notify on-call personnel
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_incident"
+    name: "Document Incident"
+    description: |
+      All incidents MUST be documented:
+      - Timeline of events
+      - Actions taken
+      - Decisions made
+      - Communications sent
+    severity: "error"
+    enforcement: "post_incident"
+
+  - id: "NEVER_hide_impact"
+    name: "Never Hide Impact"
+    description: |
+      Incident impact MUST be accurately reported:
+      - No downplaying severity
+      - Report all affected users
+      - Report exact downtime
+      - Be transparent
+    severity: "error"
+    enforcement: "post_incident"
+
+  # ============================================================================
+  # Communication
+  # ============================================================================
+
+  - id: "MUST_communicate_timely"
+    name: "Communicate Timely"
+    description: |
+      Stakeholders MUST be communicated with:
+      - Initial update within 15 minutes
+      - Updates every 30 minutes
+      - Resolution notification
+      - Post-mortem sharing
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Post-Incident
+  # ============================================================================
+
+  - id: "MUST_complete_post_mortem"
+    name: "Complete Post-Mortem"
+    description: |
+      Post-mortem MUST be completed:
+      - Within 48 hours for P1
+      - Within 1 week for P2+
+      - Include root cause
+      - Include action items
+    severity: "warning"
+    enforcement: "post_incident"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

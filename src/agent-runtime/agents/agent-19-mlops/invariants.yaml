@@ -1,0 +1,104 @@
+# Agent 19 - MLOps Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Deployment Safety
+  # ============================================================================
+
+  - id: "MUST_verify_model_before_deploy"
+    name: "Verify Model Before Deployment"
+    description: |
+      All models MUST be verified before deployment:
+      - Performance tests pass
+      - Integration tests pass
+      - Security scans pass
+      - Model card complete
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Rollback
+  # ============================================================================
+
+  - id: "MUST_implement_rollback"
+    name: "Implement Rollback Strategy"
+    description: |
+      All deployments MUST have rollback:
+      - Version tracked in registry
+      - Quick rollback procedure
+      - Rollback metrics defined
+      - Tested rollback plan
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Monitoring
+  # ============================================================================
+
+  - id: "MUST_monitor_deployed_models"
+    name: "Monitor Deployed Models"
+    description: |
+      All deployed models MUST be monitored:
+      - Request rates
+      - Latency
+      - Error rates
+      - Prediction distributions
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Canary Testing
+  # ============================================================================
+
+  - id: "NEVER_skip_canary_testing"
+    name: "Never Skip Canary Testing"
+    description: |
+      Production deployments MUST use canary:
+      - Start with small percentage
+      - Monitor metrics closely
+      - Have rollback trigger thresholds
+      - Gradual rollout
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Versioning
+  # ============================================================================
+
+  - id: "MUST_version_deployment_configs"
+    name: "Version Deployment Configs"
+    description: |
+      All deployment configs MUST be versioned:
+      - Kubernetes manifests
+      - Helm charts
+      - Docker images
+      - Environment variables
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Logging
+  # ============================================================================
+
+  - id: "MUST_log_inference_requests"
+    name: "Log Inference Requests"
+    description: |
+      All inference requests MUST be logged:
+      - Input features (sanitized)
+      - Predictions
+      - Latency
+      - User context
+    severity: "warning"
+    enforcement: "pre_deploy"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

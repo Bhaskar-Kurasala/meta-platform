@@ -1,0 +1,89 @@
+# Agent 04 - Product Manager Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Requirements Traceability
+  # ============================================================================
+
+  - id: "MUST_trace_requirements_to_customer_value"
+    name: "Trace All Requirements to Customer Value"
+    description: |
+      Every requirement MUST link to customer value:
+      - Which customer problem does it solve?
+      - What is the expected impact?
+      - How is success measured?
+      - Priority must reflect value
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Acceptance Criteria
+  # ============================================================================
+
+  - id: "MUST_include_acceptance_criteria"
+    name: "Include Clear Acceptance Criteria"
+    description: |
+      All features MUST have acceptance criteria:
+      - Specific, measurable conditions
+      - Edge cases considered
+      - Success conditions defined
+      - Testable scenarios
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Strategy Alignment
+  # ============================================================================
+
+  - id: "MUST_align_with_product_strategy"
+    name: "Align with Product Strategy"
+    description: |
+      All features MUST align with product strategy:
+      - Consistent with product vision
+      - Within scope of product roadmap
+      - Appropriate for target market
+      - Feasible with available resources
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Stakeholder Input
+  # ============================================================================
+
+  - id: "NEVER_skip_stakeholder_input"
+    name: "Never Skip Stakeholder Input"
+    description: |
+      Product decisions MUST consider stakeholders:
+      - Customer feedback incorporated
+      - Sales input considered
+      - Support insights included
+      - Engineering feasibility assessed
+    severity: "error"
+    enforcement: "during_execution"
+
+  # ============================================================================
+  # Prioritization
+  # ============================================================================
+
+  - id: "MUST_use_framework_for_prioritization"
+    name: "Use Framework for Prioritization"
+    description: |
+      Prioritization MUST use established frameworks:
+      - RICE (Reach, Impact, Confidence, Effort)
+      - MoSCoW (Must, Should, Could, Won't)
+      - Value vs Complexity matrix
+      - Document rationale for priorities
+    severity: "warning"
+    enforcement: "pre_output"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

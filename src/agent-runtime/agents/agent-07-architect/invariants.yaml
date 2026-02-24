@@ -1,0 +1,91 @@
+# Agent 07 - Technical Architect Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_architecture_decisions"
+    name: "Document All Architecture Decisions"
+    description: |
+      All architecture decisions MUST be documented in ADR format:
+      - Title and context
+      - Decision made
+      - Consequences (positive and negative)
+      - Alternatives considered
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Security
+  # ============================================================================
+
+  - id: "MUST_consider_security_first"
+    name: "Design with Security First"
+    description: |
+      Architecture MUST consider security:
+      - Authentication and authorization
+      - Data encryption
+      - Input validation
+      - Security monitoring
+      - Compliance requirements
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Scalability
+  # ============================================================================
+
+  - id: "MUST_ensure_scalability"
+    name: "Ensure Scalability in Design"
+    description: |
+      Architecture MUST support scaling:
+      - Horizontal scaling strategy
+      - Caching strategy
+      - Database scaling
+      - Load balancing
+      - Auto-scaling requirements
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Principles
+  # ============================================================================
+
+  - id: "MUST_align_with_principles"
+    name: "Align with Architectural Principles"
+    description: |
+      Design MUST align with platform principles:
+      - Microservices architecture
+      - Event-driven communication
+      - API-first design
+      - Cloud-native principles
+    severity: "warning"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Trade-offs
+  # ============================================================================
+
+  - id: "MUST_document_tradeoffs"
+    name: "Document Trade-offs"
+    description: |
+      All architecture decisions MUST document trade-offs:
+      - Performance vs complexity
+      - Flexibility vs simplicity
+      - Cost vs capability
+      - Build vs buy decisions
+    severity: "warning"
+    enforcement: "pre_output"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

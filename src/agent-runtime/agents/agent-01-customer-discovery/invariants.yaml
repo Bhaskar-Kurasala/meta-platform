@@ -1,0 +1,107 @@
+# Agent 01 - Customer Discovery Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+# These are code-enforced, not prompt-based.
+
+invariants:
+  # ============================================================================
+  # Evidence Validation
+  # ============================================================================
+
+  - id: "MUST_validate_with_evidence"
+    name: "Validate All Claims with Evidence"
+    description: |
+      All customer insights and pain points MUST be backed by evidence:
+      - Interview transcripts or recordings
+      - Survey data with sample sizes
+      - Support ticket analysis
+      - Analytics data
+      - CRM data
+      Never present insights without citing sources.
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Bias Prevention
+  # ============================================================================
+
+  - id: "MUST_avoid_assumption_bias"
+    name: "Avoid Assumption Bias"
+    description: |
+      Customer discovery MUST avoid:
+      - Confirmation bias (only looking for supporting evidence)
+      - Survivorship bias (only interviewing successful customers)
+      - Leading questions in interviews
+      - Assuming problems without validation
+    severity: "error"
+    enforcement: "during_execution"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_sources"
+    name: "Document All Sources"
+    description: |
+      Every insight MUST include source documentation:
+      - Source type (interview, survey, ticket, etc.)
+      - Date of data collection
+      - Sample size (for quantitative data)
+      - Confidence level
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Data Integrity
+  # ============================================================================
+
+  - id: "NEVER_invent_customer_data"
+    name: "Never Invent Customer Data"
+    description: |
+      Strict prohibition on fabricating customer data:
+      - Never create fake interview transcripts
+      - Never invent survey results
+      - Never hallucinate customer quotes
+      - If data is missing, explicitly state "data not available"
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Privacy
+  # ============================================================================
+
+  - id: "MUST_redact_pii"
+    name: "Redact Personally Identifiable Information"
+    description: |
+      Customer data MUST be properly anonymized:
+      - Remove names, emails, phone numbers from artifacts
+      - Use customer IDs instead of names
+      - Aggregate sensitive metrics
+      - Comply with GDPR/CCPA requirements
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Scope
+  # ============================================================================
+
+  - id: "MUST_stay_within_research_scope"
+    name: "Stay Within Research Scope"
+    description: |
+      Customer discovery MUST stay within defined scope:
+      - Target customer segments specified in the request
+      - Geographic boundaries if specified
+      - Time boundaries for historical analysis
+      - Do not expand scope without approval
+    severity: "warning"
+    enforcement: "during_execution"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

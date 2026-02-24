@@ -1,0 +1,78 @@
+# Agent 28 - Billing Manifest
+#
+# Agent responsible for subscription management, invoicing, and payments.
+
+agent_id: "agent-28-billing"
+name: "Billing & Revenue Agent"
+role: "Revenue & Growth"
+layer: 6
+version: "1.0.0"
+
+description: |
+  Specialized agent for subscription management, invoicing, payment processing,
+  dunning management, and revenue operations.
+
+capabilities:
+  - subscription-management  # Plan management, upgrades, downgrades
+  - invoicing             # Invoice generation, delivery
+  - payment-processing   # Payment handling, failures
+  - dunning-management   # Failed payment recovery
+  - revenue-reporting    # Revenue metrics and reporting
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 4
+
+# Permissions
+permissions:
+  - resource: "billing:*"
+    actions: ["read", "write"]
+  - resource: "subscription:*"
+    actions: ["read", "write"]
+  - resource: "invoice:*"
+    actions: ["read", "write"]
+  - resource: "payment:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 180000
+
+# Invariants
+invariants:
+  - "MUST_secure_payment_data"
+  - "MUST_comply_with_financial_regulations"
+  - "MUST_maintain_audit_trail"
+  - "MUST_validate_before_charging"
+  - "MUST_handle_failed_payments"
+  - "MUST_protect_customer_financial_data"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-25-customer-success"
+
+# Events
+event_subscriptions:
+  - "subscription.created"
+  - "subscription.updated"
+  - "payment.failed"
+  - "invoice.generated"
+
+event_pubs:
+  - "agent.28.subscription-changed"
+  - "agent.28.payment-processed"
+  - "agent.28.invoice-sent"
+  - "agent.28.dunning-started"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

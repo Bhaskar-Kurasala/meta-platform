@@ -1,0 +1,104 @@
+# Agent 24 - Content Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Brand Voice
+  # ============================================================================
+
+  - id: "MUST_follow_brand_voice"
+    name: "Follow Brand Voice"
+    description: |
+      Content MUST follow brand voice:
+      - Tone guidelines
+      - Style guide
+      - Terminology
+      - Visual standards
+    severity: "error"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Fact Verification
+  # ============================================================================
+
+  - id: "MUST_verify_facts"
+    name: "Verify Facts"
+    description: |
+      All facts MUST be verified:
+      - Statistics
+      - Quotes
+      - Claims
+      - References
+    severity: "error"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # SEO
+  # ============================================================================
+
+  - id: "MUST_optimize_for_seo"
+    name: "Optimize for SEO"
+    description: |
+      Content MUST be SEO optimized:
+      - Keyword research
+      - Meta descriptions
+      - Internal linking
+      - Readability
+    severity: "warning"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Review Process
+  # ============================================================================
+
+  - id: "NEVER_publish_without_review"
+    name: "Never Publish Without Review"
+    description: |
+      Content MUST be reviewed before publishing:
+      - Editorial review
+      - Technical review
+      - Compliance review
+      - Approval process
+    severity: "error"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Consistency
+  # ============================================================================
+
+  - id: "MUST_maintain_consistency"
+    name: "Maintain Consistency"
+    description: |
+      Content MUST be consistent:
+      - Terminology
+      - Formatting
+      - Voice and tone
+      - Cross-content references
+    severity: "warning"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Legal Compliance
+  # ============================================================================
+
+  - id: "MUST_comply_with_legal"
+    name: "Comply With Legal Requirements"
+    description: |
+      Content MUST comply with legal:
+      - Copyright
+      - Disclaimers
+      - Privacy policies
+      - Industry regulations
+    severity: "error"
+    enforcement: "pre_publish"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

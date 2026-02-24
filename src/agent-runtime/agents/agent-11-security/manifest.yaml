@@ -1,0 +1,77 @@
+# Agent 11 - Security Manifest
+#
+# Agent responsible for security scanning, vulnerability assessment, and trust enforcement.
+
+agent_id: "agent-11-security"
+name: "Trust & Security"
+role: "Security"
+layer: 3
+version: "1.0.0"
+
+description: |
+  Specialized agent for security scanning, vulnerability assessment, and trust enforcement.
+  Performs SAST, dependency audits, OWASP checks, and ensures secure coding practices.
+
+capabilities:
+  - sast-scanning          # Static application security testing
+  - dependency-audit      # Check dependencies for vulnerabilities
+  - owasp-check           # OWASP Top 10 vulnerability checks
+  - secret-detection     # Detect hardcoded secrets
+  - threat-modeling       # Identify potential threats
+  - security-feedback    # Provide actionable security guidance
+
+# Token budget
+token_budget:
+  input: 100000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "code:*"
+    actions: ["read"]
+  - resource: "file:*"
+    actions: ["read"]
+  - resource: "security:*"
+    actions: ["read", "write"]
+  - resource: "scan:*"
+    actions: ["execute"]
+
+# Timeout
+timeout: 600000
+
+# Invariants
+invariants:
+  - "MUST_scan_all_pull_requests"
+  - "MUST_report_all_findings"
+  - "NEVER_allow_critical_vulnerabilities"
+  - "MUST_block_secrets_in_code"
+  - "MUST_verify_dependency_safety"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-08-coder"
+    - "agent-09-review"
+
+# Events
+event_subscriptions:
+  - "agent.08.code-written"
+  - "agent.09.review-complete"
+  - "workflow.security-scan-requested"
+
+event_pubs:
+  - "agent.11.scan-complete"
+  - "agent.11.vulnerability-found"
+  - "agent.11.issues-blocked"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

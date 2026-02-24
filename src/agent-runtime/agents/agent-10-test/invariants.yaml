@@ -1,0 +1,95 @@
+# Agent 10 - Test Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Coverage Requirements
+  # ============================================================================
+
+  - id: "MUST_achieve_minimum_coverage"
+    name: "Achieve Minimum Coverage"
+    description: |
+      Test coverage MUST meet minimum thresholds:
+      - Overall coverage >= 80%
+      - New code coverage >= 90%
+      - Critical path coverage = 100%
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Test Quality
+  # ============================================================================
+
+  - id: "MUST_test_edge_cases"
+    name: "Test Edge Cases"
+    description: |
+      Tests MUST cover edge cases:
+      - Empty inputs
+      - Maximum inputs
+      - Null/undefined values
+      - Error conditions
+      - Boundary conditions
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "MUST_write_meaningful_tests"
+    name: "Write Meaningful Tests"
+    description: |
+      Tests MUST be meaningful:
+      - Test actual behavior, not implementation
+      - Clear test names describe intent
+      - Assertions verify meaningful outcomes
+      - No false positives/negatives
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Test Stability
+  # ============================================================================
+
+  - id: "NEVER_skip_failing_tests"
+    name: "Never Skip Failing Tests"
+    description: |
+      Skipping tests is prohibited:
+      - Do not use .skip or .only
+      - Do not comment out assertions
+      - Fix root cause, not symptoms
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "MUST_maintain_test_stability"
+    name: "Maintain Test Stability"
+    description: |
+      Tests MUST be stable and reliable:
+      - No flaky tests
+      - Proper test isolation
+      - Mock external dependencies
+      - Deterministic assertions
+    severity: "warning"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Test Documentation
+  # ============================================================================
+
+  - id: "MUST_document_test_strategy"
+    name: "Document Test Strategy"
+    description: |
+      Test strategy MUST be documented:
+      - Testing pyramid approach
+      - Test categories and purposes
+      - Coverage targets
+      - Maintenance guidelines
+    severity: "warning"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

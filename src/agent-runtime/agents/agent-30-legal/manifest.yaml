@@ -1,0 +1,77 @@
+# Agent 30 - Legal Manifest
+#
+# Agent responsible for contract review, compliance, and privacy.
+
+agent_id: "agent-30-legal"
+name: "Legal & Privacy Agent"
+role: "Legal, Docs & Governance"
+layer: 8
+version: "1.0.0"
+
+description: |
+  Specialized agent for contract review, compliance checking, GDPR/privacy
+  guidance, and legal risk assessment. ALWAYS requires human-in-the-loop.
+
+capabilities:
+  - contract-review        # Review contracts and agreements
+  - compliance-checking   # Check regulatory compliance
+  - privacy-guidance     # GDPR and privacy counsel
+  - risk-assessment     # Legal risk analysis
+  - policy-review       # Policy document review
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 2
+
+# Permissions
+permissions:
+  - resource: "legal:*"
+    actions: ["read", "write"]
+  - resource: "contract:*"
+    actions: ["read"]
+  - resource: "policy:*"
+    actions: ["read"]
+
+# Timeout
+timeout: 600000
+
+# Human-in-the-loop
+hitl_required: true
+
+# Invariants
+invariants:
+  - "MUST_always_require_human_approval"
+  - "MUST_flag_legal_risks"
+  - "MUST_comply_with_gdpr"
+  - "MUST_maintain_confidentiality"
+  - "MUST_escalate_complex_issues"
+  - "MUST_not_provide_legal_advice"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-32-governance"
+
+# Events
+event_subscriptions:
+  - "contract.submitted"
+  - "compliance.check-needed"
+  - "workflow.legal-review"
+
+event_pubs:
+  - "agent.30.review-complete"
+  - "agent.30.risk-identified"
+  - "agent.30.approval-required"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

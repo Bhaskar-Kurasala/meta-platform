@@ -1,0 +1,159 @@
+# Agent 00 - Master Orchestrator Manifest
+#
+# This is the central coordinator for all agent workflows.
+# Responsible for TaskGraph planning, execution, and checkpoint/resume.
+
+agent_id: "agent-00-orchestrator"
+name: "Master Orchestrator"
+role: "Orchestration"
+layer: 0
+version: "1.0.0"
+
+description: |
+  Master workflow orchestrator with TaskGraph planning and execution.
+  Coordinates all agents in the platform, manages workflow DAGs,
+  handles checkpoint/resume, and coordinates HITL (Human-in-the-Loop) approvals.
+
+capabilities:
+  - task-planning          # Build TaskGraph DAGs from requests
+  - workflow-execution    # Execute DAGs with proper dependency handling
+  - checkpoint-resume     # Persist and restore workflow state
+  - hitl-coordination     # Queue and manage human approvals
+  - multi-agent-coordination  # Dispatch tasks to other agents
+  - error-recovery        # Handle failures with retry/fallback
+  - event-tracking        # Monitor workflow progress via events
+  - state-persistence     # Persist workflow state to database
+
+# Token budget for this agent
+token_budget:
+  input: 100000
+  output: 80000
+
+# Maximum concurrent tasks this agent can handle
+max_concurrent_tasks: 10
+
+# Agent permissions - what resources this agent can access
+permissions:
+  - resource: "workflow:*"
+    actions: ["read", "write", "delete", "execute"]
+  - resource: "taskgraph:*"
+    actions: ["read", "write", "delete"]
+  - resource: "checkpoint:*"
+    actions: ["read", "write"]
+  - resource: "hitl:*"
+    actions: ["read", "write"]
+  - resource: "agent:*"
+    actions: ["read", "execute"]
+  - resource: "event:*"
+    actions: ["read", "write"]
+  - resource: "prompt-registry:*"
+    actions: ["read"]
+
+# Timeout and retry configuration
+timeout: 300000  # 5 minutes for planning
+max_retries: 3
+retry_delay_ms: 5000
+
+# Invariants - non-negotiable rules (see invariants.yaml)
+invariants:
+  - "NEVER_skip_taskgraph_validation"
+  - "MUST_checkpoint_before_major_step"
+  - "MUST_respect_agent_dependencies"
+  - "MUST_escalate_to_hitl_for_irreversible"
+  - "NEVER_execute_parallel_branches_without_isolation"
+
+# Dependencies on other agents/services
+dependencies:
+  services:
+    - "workflow-state-store"   # Postgres for TaskGraph persistence
+    - "event-bus"              # NATS for progress tracking
+    - "hitl-queue"             # Human approval queue
+    - "prompt-registry"        # Resolve prompt pins
+    - "a2a-router"             # Dispatch tasks to agents
+  agents:
+    - "agent-01-customer-discovery"
+    - "agent-02-market-research"
+    - "agent-03-competitor-intel"
+    - "agent-04-pm"
+    - "agent-05-ba"
+    - "agent-06-ux"
+    - "agent-07-architect"
+    - "agent-08-coder"
+    - "agent-09-review"
+    - "agent-10-test"
+    - "agent-11-security"
+    - "agent-12-qa"
+    - "agent-13-devops"
+
+# Workflow templates - pre-defined patterns for common tasks
+workflow_templates:
+  feature_request:
+    description: "Standard feature development workflow"
+    dag:
+      - agent: "agent-04-pm"
+        goal: "Write feature specification (BRD)"
+        depends_on: []
+      - agent: "agent-05-ba"
+        goal: "Create technical requirements"
+        depends_on: ["agent-04-pm"]
+      - agent: "agent-06-ux"
+        goal: "Design user experience"
+        depends_on: ["agent-04-pm"]
+      - agent: "agent-07-architect"
+        goal: "Create technical architecture"
+        depends_on: ["agent-05-ba"]
+      - agent: "agent-08-coder"
+        goal: "Implement feature code"
+        depends_on: ["agent-05-ba", "agent-06-ux", "agent-07-architect"]
+      - agent: "agent-10-test"
+        goal: "Write unit tests"
+        depends_on: ["agent-08-coder"]
+      - agent: "agent-09-review"
+        goal: "Code review"
+        depends_on: ["agent-08-coder"]
+      - agent: "agent-11-security"
+        goal: "Security review"
+        depends_on: ["agent-08-coder"]
+      - agent: "agent-12-qa"
+        goal: "Quality assurance testing"
+        depends_on: ["agent-10-test", "agent-09-review", "agent-11-security"]
+
+  bug_fix:
+    description: "Bug fix workflow"
+    dag:
+      - agent: "agent-15-incident"
+        goal: "Investigate and diagnose bug"
+        depends_on: []
+      - agent: "agent-08-coder"
+        goal: "Implement bug fix"
+        depends_on: ["agent-15-incident"]
+      - agent: "agent-09-review"
+        goal: "Review fix"
+        depends_on: ["agent-08-coder"]
+      - agent: "agent-13-devops"
+        goal: "Deploy fix"
+        depends_on: ["agent-09-review"]
+
+# Event subscriptions - what events this agent listens to
+event_subscriptions:
+  - "agent.*.completed"      # Any agent completion
+  - "agent.*.failed"         # Any agent failure
+  - "hitl.*"                 # HITL queue updates
+  - "workflow.*"            # Workflow lifecycle events
+
+# HITL triggers - when to pause for human approval
+hitl_triggers:
+  - type: "risk_threshold"
+    threshold: 0.8           # High risk operations
+  - type: "confidence_threshold"
+    threshold: 0.5           # Low confidence decisions
+  - type: "tool_specific"
+    tool_names:
+      - "deploy"
+      - "delete"
+      - "grant_permission"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

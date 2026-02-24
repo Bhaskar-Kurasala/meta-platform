@@ -1,0 +1,104 @@
+# Agent 20 - Labeling Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Consistency
+  # ============================================================================
+
+  - id: "MUST_ensure_label_consistency"
+    name: "Ensure Label Consistency"
+    description: |
+      Labels MUST be consistent:
+      - Clear labeling guidelines
+      - Consistent annotation format
+      - Unified label schema
+      - Regular consistency checks
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Progress Tracking
+  # ============================================================================
+
+  - id: "MUST_track_annotation_progress"
+    name: "Track Annotation Progress"
+    description: |
+      All annotation tasks MUST track progress:
+      - Items labeled vs total
+      - Annotator assignments
+      - Time per item
+      - Completion estimates
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Quality Validation
+  # ============================================================================
+
+  - id: "MUST_validate_label_quality"
+    name: "Validate Label Quality"
+    description: |
+      All labels MUST be validated:
+      - Sample review
+      - Inter-annotator agreement
+      - Consistency checks
+      - Edge case handling
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Data Validation
+  # ============================================================================
+
+  - id: "NEVER_use_unvalidated_data"
+    name: "Never Use Unvalidated Data"
+    description: |
+      Unvalidated labeled data MUST NOT be used:
+      - QA checks required
+      - Agreement threshold met
+      - Edge cases resolved
+      - Audit trail complete
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Audit Trail
+  # ============================================================================
+
+  - id: "MUST_maintain_audit_trail"
+    name: "Maintain Audit Trail"
+    description: |
+      All labeling MUST have audit trail:
+      - Who labeled each item
+      - When labeled
+      - Any changes made
+      - Quality scores
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Sensitive Data
+  # ============================================================================
+
+  - id: "MUST_handle_sensitive_data"
+    name: "Handle Sensitive Data Properly"
+    description: |
+      Sensitive data MUST be handled properly:
+      - PII anonymization
+      - Access controls
+      - Compliance requirements
+      - Secure storage
+    severity: "error"
+    enforcement: "task_completion"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

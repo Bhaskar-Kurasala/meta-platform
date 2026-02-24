@@ -1,0 +1,76 @@
+# Agent 14 - SRE Manifest
+#
+# Agent responsible for site reliability, monitoring, and SLO management.
+
+agent_id: "agent-14-sre"
+name: "SRE & Resilience"
+role: "Operations"
+layer: 4
+version: "1.0.0"
+
+description: |
+  Specialized agent for site reliability engineering, monitoring, SLO management, and disaster recovery.
+  Ensures system availability, performance, and resilience.
+
+capabilities:
+  - monitoring            # Monitor system health
+  - alerting              # Manage alerts and notifications
+  - sli-measurement      # Measure service level indicators
+  - slo-management       # Manage service level objectives
+  - incident-response    # Respond to incidents
+  - disaster-recovery    # Manage disaster recovery
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "monitoring:*"
+    actions: ["read", "write"]
+  - resource: "alert:*"
+    actions: ["read", "write", "execute"]
+  - resource: "incident:*"
+    actions: ["read", "write"]
+  - resource: "slo:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_maintain_slo_compliance"
+  - "MUST_respond_to_alerts"
+  - "MUST_implement_fault_tolerance"
+  - "MUST_document_failures"
+  - "MUST_test_recovery_procedures"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+    - "monitoring"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-15-incident"
+
+# Events
+event_subscriptions:
+  - "alert.triggered"
+  - "incident.created"
+  - "workflow.slo-breach"
+
+event_pubs:
+  - "agent.14.slo-report"
+  - "agent.14.alert-acknowledged"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

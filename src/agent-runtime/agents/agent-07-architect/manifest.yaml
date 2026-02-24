@@ -1,0 +1,72 @@
+# Agent 07 - Technical Architect Manifest
+#
+# Agent responsible for technical architecture, system design, and tech stack decisions.
+
+agent_id: "agent-07-architect"
+name: "Technical Architect"
+role: "Technical Architecture"
+layer: 2
+version: "1.0.0"
+
+description: |
+  Specialized agent for technical architecture, system design, and technology stack decisions.
+  Creates high-level designs, ADR documents, and ensures architectural principles are followed.
+
+capabilities:
+  - architecture-design     # Design system architecture
+  - adr-creation          # Create Architecture Decision Records
+  - tech-selection         # Select appropriate technologies
+  - scalability-design     # Design for scale
+  - security-architecture # Design security architecture
+  - integration-design    # Design system integrations
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 5
+
+# Permissions
+permissions:
+  - resource: "architecture:*"
+    actions: ["read", "write"]
+  - resource: "adr:*"
+    actions: ["read", "write"]
+  - resource: "artifact:*"
+    actions: ["write"]
+
+# Timeout
+timeout: 180000
+
+# Invariants
+invariants:
+  - "MUST_document_architecture_decisions"
+  - "MUST_consider_security_first"
+  - "MUST_ensure_scalability"
+  - "MUST_align_with_principles"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-05-ba"
+    - "agent-06-ux"
+
+# Events
+event_subscriptions:
+  - "agent.05.requirements-complete"
+  - "workflow.architecture-started"
+
+event_pubs:
+  - "agent.07.architecture-complete"
+  - "agent.07.adr-created"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

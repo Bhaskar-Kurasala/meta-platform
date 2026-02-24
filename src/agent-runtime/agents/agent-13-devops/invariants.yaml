@@ -1,0 +1,98 @@
+# Agent 13 - DevOps Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Approval Requirements
+  # ============================================================================
+
+  - id: "MUST_require_approval_for_production"
+    name: "Require Approval for Production"
+    description: |
+      Production deployment ALWAYS requires human approval:
+      - Cannot auto-deploy to production
+      - Must have sign-off from QA
+      - Must have security approval
+      - Audit trail required
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Pre-Deployment Validation
+  # ============================================================================
+
+  - id: "MUST_verify_tests_pass_before_deploy"
+    name: "Verify Tests Pass Before Deploy"
+    description: |
+      Deployment requires passing tests:
+      - Unit tests pass
+      - Integration tests pass
+      - Security scan passed
+      - QA approved
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  - id: "NEVER_deploy_with_known_vulnerabilities"
+    name: "Never Deploy with Known Vulnerabilities"
+    description: |
+      Cannot deploy with critical/high vulnerabilities:
+      - Security scan must pass
+      - No critical CVEs
+      - No high CVEs
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Rollback
+  # ============================================================================
+
+  - id: "MUST_implement_rollback_capability"
+    name: "Implement Rollback Capability"
+    description: |
+      All deployments must support rollback:
+      - Blue-green or canary deploy
+      - Quick rollback mechanism
+      - Health check before traffic
+      - Automated rollback triggers
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Audit & Compliance
+  # ============================================================================
+
+  - id: "MUST_maintain_deployment_audit"
+    name: "Maintain Deployment Audit Trail"
+    description: |
+      All deployments must be audited:
+      - Who deployed
+      - What was deployed
+      - When deployed
+      - Approval details
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Environment Consistency
+  # ============================================================================
+
+  - id: "MUST_use_infrastructure_as_code"
+    name: "Use Infrastructure as Code"
+    description: |
+      Infrastructure must be managed via IaC:
+      - Terraform or CloudFormation
+      - Version controlled
+      - Peer reviewed
+    severity: "warning"
+    enforcement: "pre_deploy"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

@@ -1,0 +1,76 @@
+# Agent 13 - DevOps Manifest
+#
+# Agent responsible for CI/CD, deployment automation, and infrastructure.
+
+agent_id: "agent-13-devops"
+name: "DevOps"
+role: "Operations"
+layer: 4
+version: "1.0.0"
+
+description: |
+  Specialized agent for CI/CD pipeline management, deployment automation, and infrastructure as code.
+  Manages deployments to staging and production with proper approval gates.
+
+capabilities:
+  - ci-cd-pipeline         # Manage CI/CD pipelines
+  - deployment-automation  # Automate deployments
+  - infrastructure-as-code # Manage IaC
+  - environment-management # Manage environments
+  - rollback-automation   # Automatic rollback on failure
+  - release-management    # Manage releases
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 2
+
+# Permissions
+permissions:
+  - resource: "deployment:*"
+    actions: ["read", "write", "execute"]
+  - resource: "environment:*"
+    actions: ["read", "write"]
+  - resource: "infrastructure:*"
+    actions: ["read", "write"]
+  - resource: "ci-cd:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 600000
+
+# Invariants
+invariants:
+  - "MUST_require_approval_for_production"
+  - "MUST_verify_tests_pass_before_deploy"
+  - "MUST_implement_rollback_capability"
+  - "NEVER_deploy_with_known_vulnerabilities"
+  - "MUST_maintain_deployment_audit"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-11-security"
+    - "agent-12-qa"
+
+# Events
+event_subscriptions:
+  - "agent.12.release-approved"
+  - "workflow.deploy-requested"
+
+event_pubs:
+  - "agent.13.deploy-complete"
+  - "agent.13.deploy-failed"
+  - "agent.13.rollback-executed"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

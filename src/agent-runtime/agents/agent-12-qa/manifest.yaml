@@ -1,0 +1,75 @@
+# Agent 12 - QA Manifest
+#
+# Agent responsible for QA validation, regression testing, and release signoff.
+
+agent_id: "agent-12-qa"
+name: "QA & Performance"
+role: "Quality Assurance"
+layer: 3
+version: "1.0.0"
+
+description: |
+  Specialized agent for QA validation, regression testing, and release signoff.
+  Performs E2E testing, load testing, and ensures release quality standards.
+
+capabilities:
+  - e2e-testing           # End-to-end functional testing
+  - regression-testing   # Verify no regressions introduced
+  - load-testing         # Performance and load testing
+  - smoke-testing        # Quick smoke tests
+  - release-validation   # Validate release readiness
+  - quality-gate         # Enforce quality gates
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "test:*"
+    actions: ["read", "write", "execute"]
+  - resource: "environment:*"
+    actions: ["read"]
+  - resource: "release:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 900000
+
+# Invariants:
+invariants:
+  - "MUST_pass_smoke_tests"
+  - "MUST_verify_regression_suite"
+  - "NEVER_skip_failing_tests"
+  - "MUST_achieve_test_stability"
+  - "MUST_validate_release_criteria"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-10-test"
+    - "agent-11-security"
+
+# Events
+event_subscriptions:
+  - "agent.10.tests-created"
+  - "agent.11.scan-complete"
+  - "workflow.qa-requested"
+
+event_pubs:
+  - "agent.12.qa-complete"
+  - "agent.12.release-approved"
+  - "agent.12.qa-failed"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

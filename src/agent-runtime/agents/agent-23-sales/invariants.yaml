@@ -1,0 +1,104 @@
+# Agent 23 - Sales Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Lead Qualification
+  # ============================================================================
+
+  - id: "MUST_qualify_leads_before_pursuit"
+    name: "Qualify Leads Before Pursuit"
+    description: |
+      Leads MUST be qualified before sales pursuit:
+      - BANT criteria (Budget, Authority, Need, Timeline)
+      - ICP fit
+      - Purchase intent
+      - Score threshold met
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Interaction Logging
+  # ============================================================================
+
+  - id: "MUST_log_all_interactions"
+    name: "Log All Interactions"
+    description: |
+      All sales interactions MUST be logged:
+      - Calls, emails, meetings
+      - Notes and outcomes
+      - Next steps
+      - Customer feedback
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Sales Methodology
+  # ============================================================================
+
+  - id: "MUST_follow_sales_methodology"
+    name: "Follow Sales Methodology"
+    description: |
+      Sales process MUST follow methodology:
+      - Qualification steps
+      - Discovery process
+      - Solution matching
+      - Closing techniques
+    severity: "warning"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Approvals
+  # ============================================================================
+
+  - id: "NEVER_commit_without_approval"
+    name: "Never Commit Without Approval"
+    description: |
+      Sales commitments MUST be approved:
+      - Pricing discounts
+      - Contract terms
+      - Timeline commitments
+      - Custom requests
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Pipeline Accuracy
+  # ============================================================================
+
+  - id: "MUST_maintain_pipeline_accuracy"
+    name: "Maintain Pipeline Accuracy"
+    description: |
+      Pipeline MUST be accurate:
+      - Stage probabilities
+      - Close dates
+      - Deal values
+      - Regular updates
+    severity: "warning"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Compliance
+  # ============================================================================
+
+  - id: "MUST_comply_with_compliance"
+    name: "Comply With Sales Compliance"
+    description: |
+      Sales activities MUST comply with:
+      - Data protection
+      - Anti-spam laws
+      - Industry regulations
+      - Internal policies
+    severity: "error"
+    enforcement: "task_completion"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

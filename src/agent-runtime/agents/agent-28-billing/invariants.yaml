@@ -1,0 +1,104 @@
+# Agent 28 - Billing Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Payment Security
+  # ============================================================================
+
+  - id: "MUST_secure_payment_data"
+    name: "Secure Payment Data"
+    description: |
+      Payment data MUST be secured:
+      - PCI DSS compliance
+      - Encryption at rest and transit
+      - Tokenization for card data
+      - No raw card data storage
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Financial Compliance
+  # ============================================================================
+
+  - id: "MUST_comply_with_financial_regulations"
+    name: "Comply With Financial Regulations"
+    description: |
+      All billing MUST comply with regulations:
+      - Tax calculation and collection
+      - Revenue recognition rules
+      - SOX compliance
+      - Local tax requirements
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Audit Trail
+  # ============================================================================
+
+  - id: "MUST_maintain_audit_trail"
+    name: "Maintain Audit Trail"
+    description: |
+      All billing actions MUST be audited:
+      - Transaction history
+      - Changes to subscriptions
+      - Payment attempts
+      - Refund processing
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Pre-Charge Validation
+  # ============================================================================
+
+  - id: "MUST_validate_before_charging"
+    name: "Validate Before Charging"
+    description: |
+      Payments MUST be validated before processing:
+      - Sufficient balance check
+      - Card validity verification
+      - Subscription status check
+      - Fraud signals detection
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Failed Payment Handling
+  # ============================================================================
+
+  - id: "MUST_handle_failed_payments"
+    name: "Handle Failed Payments"
+    description: |
+      Failed payments MUST be handled properly:
+      - Dunning process initiated
+      - Customer notified
+      - Retry schedule followed
+      - Account status updated
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Financial Data Protection
+  # ============================================================================
+
+  - id: "MUST_protect_customer_financial_data"
+    name: "Protect Customer Financial Data"
+    description: |
+      Customer financial data MUST be protected:
+      - Masked in all outputs
+      - Access control enforced
+      - Retention policies followed
+      - GDPR financial provisions
+    severity: "error"
+    enforcement: "always"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

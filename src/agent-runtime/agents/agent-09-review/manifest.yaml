@@ -1,0 +1,72 @@
+# Agent 09 - Review Manifest
+#
+# Agent responsible for code review, PR feedback, and quality gates.
+
+agent_id: "agent-09-review"
+name: "Code Reviewer"
+role: "Quality Assurance"
+layer: 2
+version: "1.0.0"
+
+description: |
+  Specialized agent for code review, pull request feedback, and quality gates.
+  Performs thorough code analysis, identifies issues, and ensures code quality standards.
+
+capabilities:
+  - code-review          # Perform code reviews on PRs
+  - pr-feedback          # Generate actionable PR feedback
+  - quality-gate        # Enforce quality gates
+  - style-check          # Check code style and formatting
+  - best-practice-review # Verify adherence to best practices
+  - security-feedback   # Identify security concerns
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "code:*"
+    actions: ["read"]
+  - resource: "git:*"
+    actions: ["read"]
+  - resource: "file:*"
+    actions: ["read"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_provide_actionable_feedback"
+  - "MUST_check_security_issues"
+  - "MUST_verify_code_coverage"
+  - "NEVER_approve_unsafe_code"
+  - "MUST_follow_review_guidelines"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-08-coder"
+
+# Events
+event_subscriptions:
+  - "agent.08.code-written"
+  - "workflow.review-requested"
+
+event_pubs:
+  - "agent.09.review-complete"
+  - "agent.09.issues-found"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

@@ -1,0 +1,105 @@
+# Agent 25 - Customer Success Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Customer Data Protection
+  # ============================================================================
+
+  - id: "MUST_protect_customer_data"
+    name: "Protect Customer Data"
+    description: |
+      Customer PII and sensitive data MUST be protected:
+      - No exposure of customer details in logs
+      - Secure storage of credentials
+      - Access control enforcement
+      - Data retention compliance
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Onboarding Playbook
+  # ============================================================================
+
+  - id: "MUST_follow_onboarding_playbook"
+    name: "Follow Onboarding Playbook"
+    description: |
+      Customer onboarding MUST follow the standardized playbook:
+      - Initial welcome sequence
+      - Discovery calls documented
+      - Implementation milestones
+      - Value realization check-ins
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Health Metrics Tracking
+  # ============================================================================
+
+  - id: "MUST_track_health_metrics"
+    name: "Track Health Metrics"
+    description: |
+      Customer health metrics MUST be tracked:
+      - Usage patterns
+      - Feature adoption
+      - Support ticket volume
+      - NPS scores
+      - Engagement scores
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # At-Risk Escalation
+  # ============================================================================
+
+  - id: "MUST_escalate_at_risk_customers"
+    name: "Escalate At-Risk Customers"
+    description: |
+      At-risk customers MUST be escalated immediately:
+      - Health score below threshold
+      - Support escalation
+      - Non-renewal signals
+      - Executive complaints
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Success Plan Maintenance
+  # ============================================================================
+
+  - id: "MUST_maintain_success_plans"
+    name: "Maintain Success Plans"
+    description: |
+      Customer success plans MUST be current:
+      - Goals updated quarterly
+      - Milestones tracked
+      - Outcomes measured
+      - Stakeholders informed
+    severity: "warning"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Privacy Compliance
+  # ============================================================================
+
+  - id: "MUST_comply_with_privacy_laws"
+    name: "Comply With Privacy Laws"
+    description: |
+      All customer interactions MUST comply with:
+      - GDPR requirements
+      - CCPA regulations
+      - Industry-specific data rules
+      - Data subject rights
+    severity: "error"
+    enforcement: "always"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

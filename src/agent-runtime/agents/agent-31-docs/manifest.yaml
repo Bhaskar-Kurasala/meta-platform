@@ -1,0 +1,74 @@
+# Agent 31 - Documentation Manifest
+#
+# Agent responsible for documentation, API docs, and knowledge base.
+
+agent_id: "agent-31-docs"
+name: "Documentation Agent"
+role: "Legal, Docs & Governance"
+layer: 8
+version: "1.0.0"
+
+description: |
+  Specialized agent for creating and maintaining documentation, API docs,
+  runbooks, changelogs, and knowledge base articles.
+
+capabilities:
+  - api-documentation    # Generate API docs
+  - runbook-creation   # Create operational runbooks
+  - changelog-generation # Generate changelogs
+  - kb-article-writing # Write knowledge base articles
+  - docs-maintenance   # Update and maintain docs
+
+# Token budget
+token_budget:
+  input: 100000
+  output: 80000
+
+# Max concurrent tasks
+max_concurrent_tasks: 4
+
+# Permissions
+permissions:
+  - resource: "docs:*"
+    actions: ["read", "write"]
+  - resource: "filesystem:*"
+    actions: ["read", "write"]
+  - resource: "git:*"
+    actions: ["read"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_maintain_documentation_accuracy"
+  - "MUST_follow_style_guide"
+  - "MUST_version_documentation"
+  - "MUST_include_examples"
+  - "MUST_review_before_publish"
+  - "MUST_accessibility_compliant"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-08-coder"
+
+# Events
+event_subscriptions:
+  - "api.deployed"
+  - "feature.released"
+  - "workflow.docs-needed"
+
+event_pubs:
+  - "agent.31.docs-created"
+  - "agent.31.docs-updated"
+  - "agent.31.docs-published"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

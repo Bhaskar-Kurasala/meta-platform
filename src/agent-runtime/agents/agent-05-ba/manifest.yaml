@@ -1,0 +1,76 @@
+# Agent 05 - Business Analyst Manifest
+#
+# Agent responsible for business analysis, requirements, and process modeling.
+
+agent_id: "agent-05-ba"
+name: "Business Analyst"
+role: "Business Analysis"
+layer: 1
+version: "1.0.0"
+
+description: |
+  Specialized agent for business analysis, technical requirements, and process modeling.
+  Translates business requirements into technical specifications, creates API contracts,
+  and defines domain models.
+
+capabilities:
+  - requirements-translation  # Translate business to technical requirements
+  - api-contract              # Create API specifications
+  - domain-modeling           # Design domain models
+  - process-modeling          # Create process flows
+  - data-modeling             # Design data schemas
+  - acceptance-criteria       # Define technical acceptance criteria
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 5
+
+# Permissions
+permissions:
+  - resource: "requirements:*"
+    actions: ["read", "write"]
+  - resource: "api:*"
+    actions: ["read", "write"]
+  - resource: "schema:*"
+    actions: ["read", "write"]
+  - resource: "artifact:*"
+    actions: ["write"]
+
+# Timeout
+timeout: 180000
+max_retries: 2
+
+# Invariants
+invariants:
+  - "MUST_create_testable_requirements"
+  - "MUST_validate_api_contracts"
+  - "MUST_document_dependencies"
+  - "NEVER_ambiguous_requirements"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-04-pm"
+
+# Events
+event_subscriptions:
+  - "agent.04.brd-created"
+  - "workflow.ba-started"
+
+event_pubs:
+  - "agent.05.requirements-complete"
+  - "agent.05.api-contract-created"
+  - "agent.05.schema-defined"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

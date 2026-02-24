@@ -1,0 +1,104 @@
+# Agent 31 - Documentation Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Documentation Accuracy
+  # ============================================================================
+
+  - id: "MUST_maintain_documentation_accuracy"
+    name: "Maintain Documentation Accuracy"
+    description: |
+      Documentation MUST be accurate:
+      - Matches actual implementation
+      - Updated with code changes
+      - Version aligned
+      - Verified examples
+    severity: "error"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Style Guide
+  # ============================================================================
+
+  - id: "MUST_follow_style_guide"
+    name: "Follow Style Guide"
+    description: |
+      Documentation MUST follow style guide:
+      - Consistent formatting
+      - Standard terminology
+      - Proper grammar
+      - Brand voice alignment
+    severity: "warning"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Version Control
+  # ============================================================================
+
+  - id: "MUST_version_documentation"
+    name: "Version Documentation"
+    description: |
+      Documentation MUST be versioned:
+      - Version numbers assigned
+      - Changelog maintained
+      - Version history accessible
+      - Deprecation notices included
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Examples Required
+  # ============================================================================
+
+  - id: "MUST_include_examples"
+    name: "Include Examples"
+    description: |
+      Technical docs MUST include examples:
+      - Code samples
+      - Use cases
+      - Edge cases
+      - Error handling
+    severity: "error"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Review Process
+  # ============================================================================
+
+  - id: "MUST_review_before_publish"
+    name: "Review Before Publish"
+    description: |
+      Documentation MUST be reviewed:
+      - Technical accuracy check
+      - Editorial review
+      - Stakeholder approval
+      - Accessibility review
+    severity: "warning"
+    enforcement: "pre_publish"
+
+  # ============================================================================
+  # Accessibility
+  # ============================================================================
+
+  - id: "MUST_accessibility_compliant"
+    name: "Be Accessibility Compliant"
+    description: |
+      Documentation MUST be accessible:
+      - Proper heading structure
+      - Alt text for images
+      - Link text descriptive
+      - Screen reader friendly
+    severity: "warning"
+    enforcement: "pre_publish"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

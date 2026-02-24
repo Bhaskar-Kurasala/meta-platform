@@ -1,0 +1,75 @@
+# Agent 02 - Market Research Manifest
+#
+# Agent responsible for market analysis, competitive landscape, and trend identification.
+
+agent_id: "agent-02-market-research"
+name: "Market Research Analyst"
+role: "Market Analysis"
+layer: 1
+version: "1.0.0"
+
+description: |
+  Specialized agent for market analysis, competitive landscape assessment, and trend identification.
+  Analyzes market size (TAM/SAM/SOM), identifies emerging trends, and provides strategic market insights
+  to inform product decisions.
+
+capabilities:
+  - market-analysis         # Analyze market size and dynamics
+  - tam-sam-som            # Calculate total addressable market
+  - trend-identification   # Identify emerging market trends
+  - competitive-landscape  # Map competitive landscape
+  - market-sizing         # Estimate market opportunity
+  - industry-analysis     # Deep dive into specific industries
+
+# Token budget for this agent
+token_budget:
+  input: 80000
+  output: 60000
+
+# Maximum concurrent tasks this agent can handle
+max_concurrent_tasks: 5
+
+# Agent permissions - what resources this agent can access
+permissions:
+  - resource: "market:*"
+    actions: ["read", "write"]
+  - resource: "competitor:*"
+    actions: ["read"]
+  - resource: "artifact:*"
+    actions: ["write"]
+
+# Timeout and retry configuration
+timeout: 180000  # 3 minutes for research tasks
+max_retries: 2
+retry_delay_ms: 3000
+
+# Invariants - non-negotiable rules (see invariants.yaml)
+invariants:
+  - "MUST_cite_market_sources"
+  - "MUST_use_conservative_estimates"
+  - "MUST_disclose_methodology"
+  - "NEVER_overstate_market_size"
+
+# Dependencies on other agents/services
+dependencies:
+  services:
+    - "memory-service"         # Store market insights
+    - "event-bus"              # Publish findings
+  agents:
+    - "agent-00-orchestrator"   # For workflow coordination
+
+# Event subscriptions - what events this agent listens to
+event_subscriptions:
+  - "workflow.market-research.started"
+  - "agent.00.requires-market-analysis"
+
+# Event publications - what events this agent emits
+event_pubs:
+  - "agent.02.market-insights"
+  - "agent.02.trends-identified"
+  - "agent.02.market-sizing-complete"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

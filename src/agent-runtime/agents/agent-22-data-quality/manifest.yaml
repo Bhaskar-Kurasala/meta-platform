@@ -1,0 +1,72 @@
+# Agent 22 - Data Quality Manifest
+#
+# Agent responsible for data quality validation, cleansing, and governance.
+
+agent_id: "agent-22-data-quality"
+name: "Data Quality Engineer"
+role: "Data & ML"
+layer: 5
+version: "1.0.0"
+
+description: |
+  Specialized agent for data quality validation, cleansing, and governance.
+  Ensures data meets quality standards and implements data quality rules.
+
+capabilities:
+  - quality-validation  # Validate data quality
+  - data-cleansing    # Cleanse dirty data
+  - schema-validation # Validate schemas
+  - governance        # Data governance policies
+  - anomaly-detection # Detect data anomalies
+
+# Token budget
+token_budget:
+  input: 100000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "database:*"
+    actions: ["read"]
+  - resource: "quality:*"
+    actions: ["read", "write"]
+  - resource: "schema:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_validate_schema_compliance"
+  - "MUST_check_data_freshness"
+  - "MUST_detect_duplicates"
+  - "NEVER_allow_pii_leakage"
+  - "MUST_log_quality_metrics"
+  - "MUST_enforce_quality_gates"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-17-data-engineer"
+
+# Events
+event_subscriptions:
+  - "agent.17.pipeline-ready"
+  - "workflow.quality-check-needed"
+
+event_pubs:
+  - "agent.22.validation-complete"
+  - "data-quality.batch.validated"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

@@ -1,0 +1,80 @@
+# Agent 09 - Review Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Review Quality
+  # ============================================================================
+
+  - id: "MUST_provide_actionable_feedback"
+    name: "Provide Actionable Feedback"
+    description: |
+      All review feedback MUST be actionable:
+      - Specific file and line references
+      - Clear explanation of the issue
+      - Suggested fix or approach
+      - Priority/severity classification
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Security
+  # ============================================================================
+
+  - id: "MUST_check_security_issues"
+    name: "Check Security Issues"
+    description: |
+      Security review MUST be performed:
+      - OWASP Top 10 check
+      - Dependency vulnerability scan
+      - Secret detection
+      - Input validation review
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "NEVER_approve_unsafe_code"
+    name: "Never Approve Unsafe Code"
+    description: |
+      Code with critical security issues MUST NOT be approved:
+      - SQL injection vulnerabilities
+      - XSS vulnerabilities
+      - Authentication bypass
+      - Command injection
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Code Quality
+  # ============================================================================
+
+  - id: "MUST_verify_code_coverage"
+    name: "Verify Code Coverage"
+    description: |
+      Tests MUST have adequate coverage:
+      - Minimum 80% coverage for new code
+      - Critical paths must be covered
+      - Edge cases tested
+    severity: "warning"
+    enforcement: "pre_commit"
+
+  - id: "MUST_follow_review_guidelines"
+    name: "Follow Review Guidelines"
+    description: |
+      Review process MUST follow guidelines:
+      - Review within SLA (15 minutes)
+      - Check style consistency
+      - Verify error handling
+      - Check documentation
+    severity: "error"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

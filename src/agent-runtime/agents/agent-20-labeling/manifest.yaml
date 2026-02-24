@@ -1,0 +1,74 @@
+# Agent 20 - Labeling Manifest
+#
+# Agent responsible for data labeling, annotation, and quality assurance.
+
+agent_id: "agent-20-labeling"
+name: "Data Labeler"
+role: "Data & ML"
+layer: 5
+version: "1.0.0"
+
+description: |
+  Specialized agent for data labeling, annotation tasks, and ensuring high-quality
+  labeled datasets for machine learning. Manages LabelStudio integration and
+  quality assurance processes.
+
+capabilities:
+  - data-labeling      # Label data for ML training
+  - annotation        # Create annotations
+  - quality-assurance # Verify label quality
+  - dataset-curation  # Curate training datasets
+  - inter-annotator   # Manage inter-annotator agreement
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 5
+
+# Permissions
+permissions:
+  - resource: "labelstudio:*"
+    actions: ["read", "write"]
+  - resource: "dvc:*"
+    actions: ["read", "write"]
+  - resource: "dataset:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_ensure_label_consistency"
+  - "MUST_track_annotation_progress"
+  - "MUST_validate_label_quality"
+  - "NEVER_use_unvalidated_data"
+  - "MUST_maintain_audit_trail"
+  - "MUST_handle_sensitive_data"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-17-data-engineer"
+    - "agent-18-ml-engineer"
+
+# Events
+event_subscriptions:
+  - "agent.17.pipeline-ready"
+  - "workflow.labeling-needed"
+
+event_pubs:
+  - "agent.20.labeling-complete"
+  - "labeling.dataset.ready"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

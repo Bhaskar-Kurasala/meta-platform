@@ -1,0 +1,76 @@
+# Agent 27 - Feedback Manifest
+#
+# Agent responsible for feedback collection, NPS, and sentiment analysis.
+
+agent_id: "agent-27-feedback"
+name: "Feedback Analyzer"
+role: "Revenue & Growth"
+layer: 6
+version: "1.0.0"
+
+description: |
+  Specialized agent for collecting customer feedback, analyzing sentiment,
+  tracking NPS, and synthesizing patterns from multiple feedback sources.
+
+capabilities:
+  - feedback-collection    # Collect feedback from various sources
+  - sentiment-analysis     # Analyze sentiment of feedback
+  - nps-tracking          # Track and calculate NPS scores
+  - pattern-detection     # Identify trends and patterns
+  - synthesis             # Aggregate and summarize feedback
+
+# Token budget
+token_budget:
+  input: 120000
+  output: 100000
+
+# Max concurrent tasks
+max_concurrent_tasks: 4
+
+# Permissions
+permissions:
+  - resource: "feedback:*"
+    actions: ["read", "write"]
+  - resource: "analytics:*"
+    actions: ["read"]
+  - resource: "survey:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_analyze_all_feedback"
+  - "MUST_protect_feedback_anonymity"
+  - "MUST_track_nps_accurately"
+  - "MUST_detect_urgent_issues"
+  - "MUST_maintain_feedback_history"
+  - "MUST_aggregate_across_channels"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-25-customer-success"
+    - "agent-26-support"
+
+# Events
+event_subscriptions:
+  - "feedback.received"
+  - "survey.completed"
+  - "nps.submitted"
+
+event_pubs:
+  - "agent.27.feedback-analyzed"
+  - "agent.27.sentiment-alert"
+  - "agent.27.pattern-detected"
+  - "agent.27.nps-updated"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

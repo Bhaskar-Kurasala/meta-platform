@@ -1,0 +1,105 @@
+# Agent 18 - ML Engineer Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Experiment Tracking
+  # ============================================================================
+
+  - id: "MUST_track_experiments"
+    name: "Track All Experiments"
+    description: |
+      All experiments MUST be tracked in MLflow:
+      - Parameters and hyperparameters
+      - Metrics (training and validation)
+      - Artifacts (models, plots)
+      - Code versions
+      - Data versions
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Model Versioning
+  # ============================================================================
+
+  - id: "MUST_version_models"
+    name: "Version All Models"
+    description: |
+      All models MUST be versioned:
+      - Store in MLflow registry
+      - Tag with metadata
+      - Record lineage
+      - Enable rollback
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Fairness
+  # ============================================================================
+
+  - id: "MUST_evaluate_fairness"
+    name: "Evaluate Model Fairness"
+    description: |
+      All models MUST evaluate fairness:
+      - Test on protected groups
+      - Measure disparate impact
+      - Document bias metrics
+      - Plan mitigation
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Data Dependencies
+  # ============================================================================
+
+  - id: "MUST_log_data_dependencies"
+    name: "Log Data Dependencies"
+    description: |
+      All training runs MUST log data dependencies:
+      - Dataset version used
+      - Data splits
+      - Preprocessing steps
+      - Feature versions
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Testing
+  # ============================================================================
+
+  - id: "NEVER_deploy_untested_models"
+    name: "Never Deploy Untested Models"
+    description: |
+      Models MUST be tested before deployment:
+      - Unit tests for code
+      - Integration tests for pipeline
+      - Model accuracy tests
+      - Performance benchmarks
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_model_limitations"
+    name: "Document Model Limitations"
+    description: |
+      All models MUST document limitations:
+      - Known failure cases
+      - Performance boundaries
+      - Edge cases
+      - Assumptions
+    severity: "warning"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

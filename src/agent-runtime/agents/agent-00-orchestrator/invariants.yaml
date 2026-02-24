@@ -1,0 +1,181 @@
+# Agent 00 - Master Orchestrator Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+# These are code-enforced, not prompt-based.
+
+invariants:
+  # ============================================================================
+  # TaskGraph Validation
+  # ============================================================================
+
+  - id: "NEVER_skip_taskgraph_validation"
+    name: "TaskGraph Must Be Validated"
+    description: |
+      Before executing any TaskGraph, the Orchestrator MUST validate:
+      - No circular dependencies (DAG property)
+      - All referenced agents exist
+      - All dependencies are valid node IDs
+      - No orphan nodes (nodes with invalid depends_on)
+      - Total nodes within max_concurrent_tasks limit
+    severity: "error"
+    enforcement: "pre_execution"
+
+  # ============================================================================
+  # Checkpoint Management
+  # ============================================================================
+
+  - id: "MUST_checkpoint_before_major_step"
+    name: "Checkpoint Before Major Steps"
+    description: |
+      The Orchestrator MUST persist TaskGraph state:
+      - Before dispatching any node
+      - After any node completes (success or failure)
+      - Before retrying a failed node
+      - Before escalating to HITL
+      - At least every 60 seconds during long-running workflows
+    severity: "error"
+    enforcement: "pre_and_post_execution"
+
+  # ============================================================================
+  # Dependency Management
+  # ============================================================================
+
+  - id: "MUST_respect_agent_dependencies"
+    name: "Respect DAG Dependencies"
+    description: |
+      The Orchestrator MUST NOT dispatch a node until:
+      - All nodes in its depends_on array have status "completed"
+      - This is true even if the node is "ready" for other reasons
+      - Parallel branches must have proper isolation (separate result refs)
+    severity: "error"
+    enforcement: "pre_dispatch"
+
+  # ============================================================================
+  # HITL Requirements
+  # ============================================================================
+
+  - id: "MUST_escalate_to_hitl_for_irreversible"
+    name: "Escalate Irreversible Actions to HITL"
+    description: |
+      The Orchestrator MUST submit to HITL queue when:
+      - Risk score exceeds threshold (0.8)
+      - Confidence below threshold (0.5)
+      - Tool is in the high-risk category (deploy, delete, grant)
+      - Action modifies production data
+      - Action cannot be rolled back
+      The workflow MUST pause until HITL approval is received.
+    severity: "error"
+    enforcement: "pre_action"
+
+  - id: "MUST_not_proceed_without_hitl_approval"
+    name: "Wait for HITL Approval"
+    description: |
+      Once a task is submitted to HITL queue:
+      - Orchestrator MUST NOT proceed with the action
+      - Orchestrator MUST NOT retry the action
+      - Must wait for approval or rejection response
+      - On rejection, must handle gracefully (abort, skip, or re-plan)
+    severity: "error"
+    enforcement: "during_wait"
+
+  # ============================================================================
+  # Parallel Execution Safety
+  # ============================================================================
+
+  - id: "NEVER_execute_parallel_branches_without_isolation"
+    name: "Isolate Parallel Branches"
+    description: |
+      When executing parallel branches in a DAG:
+      - Each branch MUST have separate result storage
+      - Branches MUST NOT share mutable state
+      - Failure in one branch MUST NOT corrupt another
+      - Completion of one branch MUST NOT block another
+    severity: "error"
+    enforcement: "pre_dispatch"
+
+  # ============================================================================
+  # Error Handling
+  # ============================================================================
+
+  - id: "MUST_retry_on_transient_failure"
+    name: "Retry on Transient Failures"
+    description: |
+      The Orchestrator MUST retry failed nodes:
+      - Up to max_retries times (default: 2)
+      - With exponential backoff (5s, 15s)
+      - For transient errors (timeout, rate limit, network)
+      - NOT for invariant violations or HITL rejections
+    severity: "warning"
+    enforcement: "on_failure"
+
+  - id: "MUST_handle_node_failure_gracefully"
+    name: "Handle Node Failures Gracefully"
+    description: |
+      When a node fails after retries:
+      - If node has dependents: check if they can proceed
+      - If dependents exist: pause workflow, escalate to human
+      - If no dependents: mark node failed, continue
+      - Log failure details for debugging
+    severity: "error"
+    enforcement: "on_failure"
+
+  # ============================================================================
+  # Resource Management
+  # ============================================================================
+
+  - id: "MUST_not_exceed_max_concurrent_tasks"
+    name: "Respect Concurrency Limits"
+    description: |
+      The Orchestrator MUST NOT exceed max_concurrent_tasks:
+      - Track running tasks at all times
+      - Queue additional tasks until slot available
+      - Default limit: 10 concurrent tasks
+    severity: "error"
+    enforcement: "pre_dispatch"
+
+  - id: "MUST_track_token_budget"
+    name: "Track Token Budget"
+    description: |
+      The Orchestrator MUST track token usage:
+      - Per-task: input + output tokens
+      - Per-workflow: cumulative tokens
+      - Alert when approaching budget limits
+      - Fail gracefully when budget exceeded
+    severity: "warning"
+    enforcement: "during_execution"
+
+  # ============================================================================
+  # Workflow Completion
+  # ============================================================================
+
+  - id: "MUST_report_final_status"
+    name: "Report Final Workflow Status"
+    description: |
+      On workflow completion (success, failure, or abort):
+      - Update workflow status in database
+      - Emit completion event
+      - Include final TaskGraph state
+      - Include all artifacts produced
+      - Clean up temporary resources
+    severity: "error"
+    enforcement: "post_execution"
+
+  - id: "MUST_preserve_checkpoint_data"
+    name: "Preserve Checkpoint Data"
+    description: |
+      Checkpoint data MUST be preserved:
+      - Until workflow completes AND human confirms
+      - Minimum 24 hours for audit purposes
+      - Include: TaskGraph state, node results, events
+    severity: "error"
+    enforcement: "post_execution"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false          # Warnings don't stop execution
+  log_violations: true            # Log all invariant violations
+  metrics_enabled: true          # Track invariant metrics
+  alert_on_error: true           # Alert on error-level violations

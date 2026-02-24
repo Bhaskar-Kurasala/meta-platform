@@ -1,0 +1,101 @@
+# Agent 22 - Data Quality Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Schema Validation
+  # ============================================================================
+
+  - id: "MUST_validate_schema_compliance"
+    name: "Validate Schema Compliance"
+    description: |
+      Data MUST comply with schemas:
+      - Type checking
+      - Required fields
+      - Value constraints
+      - Format validation
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Freshness
+  # ============================================================================
+
+  - id: "MUST_check_data_freshness"
+    name: "Check Data Freshness"
+    description: |
+      Data freshness MUST be verified:
+      - Last update timestamp
+      - Expected frequency
+      - Staleness detection
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Duplicates
+  # ============================================================================
+
+  - id: "MUST_detect_duplicates"
+    name: "Detect Duplicates"
+    description: |
+      Duplicates MUST be detected:
+      - Exact duplicates
+      - Near duplicates
+      - Primary key violations
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # PII Protection
+  # ============================================================================
+
+  - id: "NEVER_allow_pii_leakage"
+    name: "Never Allow PII Leakage"
+    description: |
+      PII MUST be protected:
+      - No unauthorized PII access
+      - PII fields masked
+      - Access logging
+      - Compliance enforced
+    severity: "error"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Metrics Logging
+  # ============================================================================
+
+  - id: "MUST_log_quality_metrics"
+    name: "Log Quality Metrics"
+    description: |
+      Quality metrics MUST be logged:
+      - Completeness
+      - Accuracy
+      - Consistency
+      - Timeliness
+    severity: "warning"
+    enforcement: "task_completion"
+
+  # ============================================================================
+  # Quality Gates
+  # ============================================================================
+
+  - id: "MUST_enforce_quality_gates"
+    name: "Enforce Quality Gates"
+    description: |
+      Quality gates MUST be enforced:
+      - Pass/fail thresholds
+      - Blocking on failure
+      - Approval workflows
+    severity: "error"
+    enforcement: "task_completion"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

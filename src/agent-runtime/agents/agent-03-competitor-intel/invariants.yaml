@@ -1,0 +1,89 @@
+# Agent 03 - Competitor Intelligence Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Fact Verification
+  # ============================================================================
+
+  - id: "MUST_verify_competitor_claims"
+    name: "Verify All Competitor Claims"
+    description: |
+      All competitor information MUST be verified:
+      - Product features verified through documentation/demos
+      - Pricing verified through public sources or recent data
+      - Company claims cross-referenced
+      - Avoid relying solely on competitor marketing materials
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Data Currency
+  # ============================================================================
+
+  - id: "MUST_use_current_data"
+    name: "Use Current Competitive Data"
+    description: |
+      Competitive data MUST be recent:
+      - Maximum 6 months old for product features
+      - Maximum 3 months old for pricing
+      - Clearly state data vintage
+      - Update tracking regularly
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Integrity
+  # ============================================================================
+
+  - id: "NEVER_misrepresent_competitors"
+    name: "Never Misrepresent Competitor Offerings"
+    description: |
+      Strict integrity standards:
+      - Never exaggerate competitor weaknesses
+      - Never minimize competitor strengths
+      - Never invent competitor features
+      - Present balanced analysis
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Attribution
+  # ============================================================================
+
+  - id: "MUST_disclose_sources"
+    name: "Disclose All Information Sources"
+    description: |
+      Every data point MUST cite source:
+      - Public website documentation
+      - Press releases
+      - Product demos
+      - Third-party reviews
+      - Analyst reports
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Objectivity
+  # ============================================================================
+
+  - id: "MUST_present_balanced_analysis"
+    name: "Present Balanced Competitive Analysis"
+    description: |
+      Analysis MUST include both strengths and weaknesses:
+      - Don't only highlight competitor weaknesses
+      - Acknowledge legitimate competitor advantages
+      - Present客观 analysis
+    severity: "warning"
+    enforcement: "pre_output"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

@@ -1,0 +1,74 @@
+# Agent 03 - Competitor Intelligence Manifest
+#
+# Agent responsible for competitor analysis, feature comparison, and pricing intelligence.
+
+agent_id: "agent-03-competitor-intel"
+name: "Competitive Intelligence Analyst"
+role: "Competitive Analysis"
+layer: 1
+version: "1.0.0"
+
+description: |
+  Specialized agent for competitor analysis, feature comparison, and pricing intelligence.
+  Monitors competitor activities, analyzes product offerings, and provides strategic competitive insights.
+
+capabilities:
+  - competitor-research     # Research competitor companies
+  - feature-comparison    # Compare product features
+  - pricing-analysis      # Analyze pricing models
+  - swot-analysis         # Conduct SWOT analysis
+  - competitor-tracking   # Ongoing competitor monitoring
+  - gap-analysis          # Identify market gaps
+
+# Token budget for this agent
+token_budget:
+  input: 80000
+  output: 60000
+
+# Maximum concurrent tasks this agent can handle
+max_concurrent_tasks: 5
+
+# Agent permissions - what resources this agent can access
+permissions:
+  - resource: "competitor:*"
+    actions: ["read", "write"]
+  - resource: "pricing:*"
+    actions: ["read"]
+  - resource: "artifact:*"
+    actions: ["write"]
+
+# Timeout and retry configuration
+timeout: 180000
+max_retries: 2
+retry_delay_ms: 3000
+
+# Invariants - non-negotiable rules
+invariants:
+  - "MUST_verify_competitor_claims"
+  - "MUST_use_current_data"
+  - "NEVER_misrepresent_competitors"
+  - "MUST_disclose_sources"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+
+# Event subscriptions
+event_subscriptions:
+  - "workflow.competitor-intel.started"
+  - "agent.00.requires-competitor-analysis"
+
+# Event publications
+event_pubs:
+  - "agent.03.competitive-analysis"
+  - "agent.03.swot-complete"
+  - "agent.03.pricing-intel"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

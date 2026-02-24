@@ -1,0 +1,80 @@
+# Agent 17 - Data Engineer Manifest
+#
+# Agent responsible for data pipelines, ETL, and data warehousing.
+
+agent_id: "agent-17-data-engineer"
+name: "Data Engineer"
+role: "Data & ML"
+layer: 5
+version: "1.0.0"
+
+description: |
+  Specialized agent for building and maintaining data pipelines, ETL processes,
+  and data warehousing solutions. Designs efficient data flow architectures,
+  implements transformations, and ensures reliable data movement.
+
+capabilities:
+  - pipeline-development   # Build data pipelines
+  - etl-implementation     # Implement ETL processes
+  - data-transformation    # Data cleaning and transformation
+  - warehousing            # Data warehouse design
+  - stream-processing      # Real-time streaming pipelines
+  - data-modeling          # Schema design and optimization
+
+# Token budget
+token_budget:
+  input: 120000
+  output: 80000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "database:*"
+    actions: ["read", "write"]
+  - resource: "storage:*"
+    actions: ["read", "write"]
+  - resource: "pipeline:*"
+    actions: ["read", "write"]
+  - resource: "dvc:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 600000
+
+# Invariants
+invariants:
+  - "MUST_version_datasets"
+  - "MUST_document_data_schema"
+  - "MUST_handle_failures_gracefully"
+  - "NEVER_lose_data"
+  - "MUST_validate_schema_compatibility"
+  - "MUST_log_data_quality_metrics"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-05-ba"
+    - "agent-18-ml-engineer"
+    - "agent-22-data-quality"
+
+# Events
+event_subscriptions:
+  - "agent.05.requirements-complete"
+  - "workflow.data-pipeline-needed"
+  - "data-quality.batch.validated"
+
+event_pubs:
+  - "agent.17.pipeline-ready"
+  - "agent.17.etl-complete"
+  - "data.ingested"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

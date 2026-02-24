@@ -1,0 +1,104 @@
+# Agent 21 - Model Monitor Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Prediction Monitoring
+  # ============================================================================
+
+  - id: "MUST_monitor_prediction_distribution"
+    name: "Monitor Prediction Distribution"
+    description: |
+      All models MUST monitor predictions:
+      - Track prediction classes
+      - Monitor confidence scores
+      - Compare to training distribution
+      - Alert on significant shifts
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Drift Detection
+  # ============================================================================
+
+  - id: "MUST_detect_drift_automatically"
+    name: "Detect Drift Automatically"
+    description: |
+      Drift MUST be detected automatically:
+      - Data drift detection
+      - Concept drift detection
+      - Model drift detection
+      - Statistical tests
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Alerting
+  # ============================================================================
+
+  - id: "MUST_alert_on_anomalies"
+    name: "Alert on Anomalies"
+    description: |
+      Anomalies MUST trigger alerts:
+      - Define alert thresholds
+      - Multiple alert channels
+      - Severity levels
+      - Escalation paths
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Accuracy Tracking
+  # ============================================================================
+
+  - id: "MUST_track_accuracy_over_time"
+    name: "Track Accuracy Over Time"
+    description: |
+      Accuracy MUST be tracked continuously:
+      - Collect ground truth
+      - Calculate metrics periodically
+      - Compare to baseline
+      - Trend analysis
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Drift Response
+  # ============================================================================
+
+  - id: "NEVER_ignore_drift_alerts"
+    name: "Never Ignore Drift Alerts"
+    description: |
+      Drift alerts MUST be acted upon:
+      - Investigate root cause
+      - Document findings
+      - Plan remediation
+      - Retrain if needed
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Baseline
+  # ============================================================================
+
+  - id: "MUST_maintain_baseline"
+    name: "Maintain Performance Baseline"
+    description: |
+      Baselines MUST be maintained:
+      - Training metrics baseline
+      - Expected performance range
+      - Drift thresholds
+      - Update periodically
+    severity: "warning"
+    enforcement: "task_completion"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

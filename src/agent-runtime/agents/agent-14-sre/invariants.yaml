@@ -1,0 +1,104 @@
+# Agent 14 - SRE Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # SLO Requirements
+  # ============================================================================
+
+  - id: "MUST_maintain_slo_compliance"
+    name: "Maintain SLO Compliance"
+    description: |
+      Service Level Objectives MUST be maintained:
+      - Availability >= 99.5%
+      - Latency P95 < 500ms
+      - Error rate < 0.1%
+      - Budget consumption tracked
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Alert Response
+  # ============================================================================
+
+  - id: "MUST_respond_to_alerts"
+    name: "Respond to Alerts"
+    description: |
+      Alerts MUST be responded to within SLA:
+      - Critical alerts: <= 5 minutes
+      - High alerts: <= 15 minutes
+      - Medium alerts: <= 1 hour
+      - Low alerts: <= 4 hours
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Fault Tolerance
+  # ============================================================================
+
+  - id: "MUST_implement_fault_tolerance"
+    name: "Implement Fault Tolerance"
+    description: |
+      System MUST have fault tolerance:
+      - No single point of failure
+      - Graceful degradation
+      - Circuit breakers
+      - Retry policies
+    severity: "error"
+    enforcement: "pre_deploy"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_failures"
+    name: "Document Failures"
+    description: |
+      All failures MUST be documented:
+      - Root cause analysis
+      - Impact assessment
+      - Remediation steps
+      - Prevention measures
+    severity: "error"
+    enforcement: "post_incident"
+
+  # ============================================================================
+  # Recovery Testing
+  # ============================================================================
+
+  - id: "MUST_test_recovery_procedures"
+    name: "Test Recovery Procedures"
+    description: |
+      Recovery procedures MUST be tested:
+      - Regular disaster recovery drills
+      - Backup restoration tests
+      - Failover tests
+      - Chaos engineering
+    severity: "warning"
+    enforcement: "scheduled"
+
+  # ============================================================================
+  # Observability
+  # ============================================================================
+
+  - id: "MUST_maintain_observability"
+    name: "Maintain Observability"
+    description: |
+      System MUST be observable:
+      - Metrics for all components
+      - Distributed tracing
+      - Log aggregation
+      - Dashboard visibility
+    severity: "error"
+    enforcement: "pre_deploy"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

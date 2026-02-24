@@ -1,0 +1,72 @@
+# Agent 24 - Content Manifest
+#
+# Agent responsible for content creation, copywriting, and marketing materials.
+
+agent_id: "agent-24-content"
+name: "Content Creator"
+role: "Revenue & Growth"
+layer: 6
+version: "1.0.0"
+
+description: |
+  Specialized agent for content creation, copywriting, SEO optimization,
+  and marketing material development.
+
+capabilities:
+  - content-creation  # Write content
+  - copywriting        # Marketing copy
+  - seo-optimization  # SEO optimization
+  - editing           # Edit and refine content
+  - content-strategy  # Content planning
+
+# Token budget
+token_budget:
+  input: 100000
+  output: 80000
+
+# Max concurrent tasks
+max_concurrent_tasks: 4
+
+# Permissions
+permissions:
+  - resource: "content:*"
+    actions: ["read", "write"]
+  - resource: "filesystem:*"
+    actions: ["read", "write"]
+  - resource: "websearch:*"
+    actions: ["read"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_follow_brand_voice"
+  - "MUST_verify_facts"
+  - "MUST_optimize_for_seo"
+  - "NEVER_publish_without_review"
+  - "MUST_maintain_consistency"
+  - "MUST_comply_with_legal"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-02-market-research"
+
+# Events
+event_subscriptions:
+  - "agent.02.analysis-complete"
+  - "workflow.content-needed"
+
+event_pubs:
+  - "agent.24.content-created"
+  - "content.published"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

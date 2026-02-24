@@ -1,0 +1,104 @@
+# Agent 26 - Support Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Ticket Classification
+  # ============================================================================
+
+  - id: "MUST_classify_tickets_accurately"
+    name: "Classify Tickets Accurately"
+    description: |
+      Support tickets MUST be accurately classified:
+      - Correct category assignment
+      - Accurate priority level
+      - Proper component identification
+      - Complete information capture
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Priority & Impact
+  # ============================================================================
+
+  - id: "MUST_prioritize_by_impact"
+    name: "Prioritize by Impact"
+    description: |
+      Tickets MUST be prioritized based on impact:
+      - Customer severity level
+      - Number of affected users
+      - Business criticality
+      - Time sensitivity
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Security Escalation
+  # ============================================================================
+
+  - id: "MUST_escalate_security_issues"
+    name: "Escalate Security Issues"
+    description: |
+      Security-related tickets MUST be escalated immediately:
+      - Data breaches
+      - Unauthorized access
+      - Vulnerability reports
+      - Compliance violations
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # SLA Compliance
+  # ============================================================================
+
+  - id: "MUST_maintain_sla_compliance"
+    name: "Maintain SLA Compliance"
+    description: |
+      Support operations MUST maintain SLA:
+      - Response time targets
+      - Resolution time targets
+      - Escalation deadlines
+      - Customer communication windows
+    severity: "warning"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Data Protection
+  # ============================================================================
+
+  - id: "MUST_protect_customer_data"
+    name: "Protect Customer Data"
+    description: |
+      Customer data in tickets MUST be protected:
+      - No PII in logs
+      - Secure ticket handling
+      - Access control enforcement
+      - Data retention policies
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Resolution Documentation
+  # ============================================================================
+
+  - id: "MUST_document_resolutions"
+    name: "Document Resolutions"
+    description: |
+      All resolutions MUST be documented:
+      - Root cause identified
+      - Steps taken
+      - Solution applied
+      - Prevention measures
+    severity: "warning"
+    enforcement: "on_action"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

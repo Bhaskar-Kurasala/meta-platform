@@ -1,0 +1,97 @@
+# Agent 11 - Security Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Scanning Requirements
+  # ============================================================================
+
+  - id: "MUST_scan_all_pull_requests"
+    name: "Scan All Pull Requests"
+    description: |
+      Security scans MUST be performed on all PRs:
+      - SAST scan on every code change
+      - Dependency audit on every PR
+      - Secret scanning on all commits
+      - No exceptions for small changes
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "MUST_report_all_findings"
+    name: "Report All Findings"
+    description: |
+      All security findings MUST be reported:
+      - No finding suppression without justification
+      - Full vulnerability details
+      - Severity classification
+      - Remediation guidance
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Critical Protections
+  # ============================================================================
+
+  - id: "NEVER_allow_critical_vulnerabilities"
+    name: "Never Allow Critical Vulnerabilities"
+    description: |
+      Critical vulnerabilities MUST block merge:
+      - RCE (Remote Code Execution)
+      - SQL Injection
+      - Authentication Bypass
+      - Data Exfiltration
+      - Privilege Escalation
+    severity: "error"
+    enforcement: "pre_commit"
+
+  - id: "MUST_block_secrets_in_code"
+    name: "Block Secrets in Code"
+    description: |
+      Hardcoded secrets MUST be blocked:
+      - API keys
+      - Passwords
+      - Private keys
+      - Tokens
+      - Credentials
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Dependency Safety
+  # ============================================================================
+
+  - id: "MUST_verify_dependency_safety"
+    name: "Verify Dependency Safety"
+    description: |
+      Dependencies MUST be verified safe:
+      - No known CVEs
+      - Check maintained packages
+      - Verify license compliance
+      - Check for supply chain attacks
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Response Time
+  # ============================================================================
+
+  - id: "MUST_respond_to_critical_issues"
+    name: "Respond to Critical Issues Quickly"
+    description: |
+      Critical security issues MUST be addressed fast:
+      - Response within 1 hour
+      - Escalation if not addressed
+      - Full documentation
+    severity: "warning"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

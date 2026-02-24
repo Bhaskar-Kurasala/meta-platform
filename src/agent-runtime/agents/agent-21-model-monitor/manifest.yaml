@@ -1,0 +1,73 @@
+# Agent 21 - Model Monitor Manifest
+#
+# Agent responsible for model monitoring, drift detection, and performance tracking.
+
+agent_id: "agent-21-model-monitor"
+name: "Model Monitor"
+role: "Data & ML"
+layer: 5
+version: "1.0.0"
+
+description: |
+  Specialized agent for monitoring deployed ML models, detecting drift, tracking
+  performance metrics, and alerting on anomalies.
+
+capabilities:
+  - drift-detection    # Detect data and model drift
+  - performance-monitoring  # Track model performance
+  - anomaly-detection  # Detect prediction anomalies
+  - alerting            # Generate alerts on issues
+  - reporting          # Create monitoring reports
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 50000
+
+# Max concurrent tasks
+max_concurrent_tasks: 5
+
+# Permissions
+permissions:
+  - resource: "mlflow:*"
+    actions: ["read"]
+  - resource: "prometheus:*"
+    actions: ["read"]
+  - resource: "model-metrics:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 180000
+
+# Invariants
+invariants:
+  - "MUST_monitor_prediction_distribution"
+  - "MUST_detect_drift_automatically"
+  - "MUST_alert_on_anomalies"
+  - "MUST_track_accuracy_over_time"
+  - "NEVER_ignore_drift_alerts"
+  - "MUST_maintain_baseline"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-19-mlops"
+
+# Events
+event_subscriptions:
+  - "ml.model.deployed"
+  - "workflow.monitoring-needed"
+
+event_pubs:
+  - "agent.21.drift-detected"
+  - "model.anomaly-detected"
+  - "model.drift-detected"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

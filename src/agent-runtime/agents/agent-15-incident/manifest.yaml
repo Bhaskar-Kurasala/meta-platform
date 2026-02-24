@@ -1,0 +1,76 @@
+# Agent 15 - Incident Manifest
+#
+# Agent responsible for incident management, diagnosis, and post-mortem.
+
+agent_id: "agent-15-incident"
+name: "Incident Responder"
+role: "Operations"
+layer: 4
+version: "1.0.0"
+
+description: |
+  Specialized agent for incident management, diagnosis, runbook execution, and escalation.
+  Handles production incidents, coordinates response, and produces post-mortems.
+
+capabilities:
+  - incident-detection    # Detect and classify incidents
+  - incident-diagnosis    # Diagnose root causes
+  - runbook-execution     # Execute runbooks
+  - escalation-management # Manage escalations
+  - post-mortem           # Create post-mortems
+  - incident-communication # Handle communications
+
+# Token budget
+token_budget:
+  input: 100000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 2
+
+# Permissions
+permissions:
+  - resource: "incident:*"
+    actions: ["read", "write", "execute"]
+  - resource: "runbook:*"
+    actions: ["read", "execute"]
+  - resource: "escalation:*"
+    actions: ["read", "write"]
+  - resource: "oncall:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 600000
+
+# Invariants
+invariants:
+  - "MUST_respond_to_incidents"
+  - "MUST_escalate_unresolved"
+  - "MUST_document_incident"
+  - "NEVER_hide_impact"
+  - "MUST_communicate_timely"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-14-sre"
+
+# Events
+event_subscriptions:
+  - "alert.triggered"
+  - "incident.created"
+  - "workflow.incident-reported"
+
+event_pubs:
+  - "agent.15.incident-updated"
+  - "agent.15.incident-resolved"
+  - "agent.15.post-mortem-complete"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

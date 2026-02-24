@@ -1,0 +1,89 @@
+# Agent 06 - UX Designer Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Accessibility
+  # ============================================================================
+
+  - id: "MUST_follow_accessibility_standards"
+    name: "Follow WCAG Accessibility Standards"
+    description: |
+      All designs MUST meet WCAG 2.1 AA standards:
+      - Color contrast ratios meet 4.5:1 minimum
+      - All interactive elements keyboard accessible
+      - Proper ARIA labels defined
+      - Screen reader compatible
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # User Research
+  # ============================================================================
+
+  - id: "MUST_validate_with_user_research"
+    name: "Validate Designs with User Research"
+    description: |
+      Design decisions MUST be validated:
+      - User research conducted for major flows
+      - Usability testing results incorporated
+      - Feedback from target users included
+      - Iterative design based on evidence
+    severity: "error"
+    enforcement: "during_execution"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_design_rationale"
+    name: "Document Design Decisions"
+    description: |
+      All design decisions MUST include rationale:
+      - Why this approach was chosen
+      - What user problems it solves
+      - Alternative approaches considered
+      - Trade-offs acknowledged
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Usability
+  # ============================================================================
+
+  - id: "NEVER_skip_usability_checks"
+    name: "Never Skip Usability Validation"
+    description: |
+      Usability MUST be validated:
+      - Critical user paths tested
+      - Error states considered
+      - Loading states designed
+      - Edge cases handled
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Consistency
+  # ============================================================================
+
+  - id: "MUST_follow_design_system"
+    name: "Follow Design System"
+    description: |
+      Designs MUST follow design system:
+      - Use defined color palette
+      - Follow typography scale
+      - Use consistent spacing
+      - Reuse components
+    severity: "warning"
+    enforcement: "pre_output"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

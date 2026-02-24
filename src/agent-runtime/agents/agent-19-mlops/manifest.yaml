@@ -1,0 +1,78 @@
+# Agent 19 - MLOps Manifest
+#
+# Agent responsible for ML operations, model deployment, and reproducibility.
+
+agent_id: "agent-19-mlops"
+name: "MLOps Engineer"
+role: "Data & ML"
+layer: 5
+version: "1.0.0"
+
+description: |
+  Specialized agent for ML operations including model deployment, serving infrastructure,
+  CI/CD for ML, and ensuring reproducibility of ML workflows.
+
+capabilities:
+  - model-deployment    # Deploy models to production
+  - serving-setup      # Set up model serving infrastructure
+  - ci-cd-automation  # CI/CD pipelines for ML
+  - reproducibility   # Ensure reproducible ML workflows
+  - model-registration # Manage model registry
+  - infrastructure    # Manage ML infrastructure
+
+# Token budget
+token_budget:
+  input: 100000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 3
+
+# Permissions
+permissions:
+  - resource: "mlflow:*"
+    actions: ["read", "write"]
+  - resource: "k8s:*"
+    actions: ["read", "write"]
+  - resource: "docker:*"
+    actions: ["read", "write"]
+  - resource: "model-serving:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 600000
+
+# Invariants
+invariants:
+  - "MUST_verify_model_before_deploy"
+  - "MUST_implement_rollback"
+  - "MUST_monitor_deployed_models"
+  - "NEVER_skip_canary_testing"
+  - "MUST_version_deployment_configs"
+  - "MUST_log_inference_requests"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-18-ml-engineer"
+    - "agent-21-model-monitor"
+
+# Events
+event_subscriptions:
+  - "agent.18.model-trained"
+  - "workflow.deployment-needed"
+  - "model.drift-detected"
+
+event_pubs:
+  - "agent.19.deployment-complete"
+  - "ml.model.deployed"
+  - "infrastructure.deployed"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

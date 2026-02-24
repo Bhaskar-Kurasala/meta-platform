@@ -1,0 +1,103 @@
+# Agent 08 - Coder Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Code Quality
+  # ============================================================================
+
+  - id: "MUST_follow_coding_standards"
+    name: "Follow Coding Standards"
+    description: |
+      All code MUST follow platform standards:
+      - Language style guides (ESLint, Prettier, etc.)
+      - Naming conventions
+      - Code organization
+      - Error handling patterns
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Testability
+  # ============================================================================
+
+  - id: "MUST_write_testable_code"
+    name: "Write Testable Code"
+    description: |
+      All code MUST be testable:
+      - Functions have single responsibility
+      - Dependencies injected
+      - No hard-coded values
+      - Error conditions handled
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_include_documentation"
+    name: "Include Code Documentation"
+    description: |
+      All code MUST be documented:
+      - JSDoc/TSDoc for functions
+      - Complex logic explanations
+      - README updates for new features
+      - API documentation
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Security
+  # ============================================================================
+
+  - id: "NEVER_commit_secrets"
+    name: "Never Commit Secrets"
+    description: |
+      Strict prohibition on secrets:
+      - No API keys in code
+      - No passwords in code
+      - No credentials in code
+      - Use environment variables
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Linting
+  # ============================================================================
+
+  - id: "MUST_pass_linting"
+    name: "Pass Linting Checks"
+    description: |
+      All code MUST pass linting:
+      - No linting errors
+      - No type errors
+      - Format passes
+      - Tests pass
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Version Control
+  # ============================================================================
+
+  - id: "MUST_use_meaningful_commits"
+    name: "Use Meaningful Commit Messages"
+    description: |
+      Commit messages MUST be descriptive:
+      - What changed and why
+      - Reference to issue/ticket
+      - Clear and concise
+    severity: "warning"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

@@ -1,0 +1,100 @@
+# Agent 16 - Cost Optimizer Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Budget Requirements
+  # ============================================================================
+
+  - id: "MUST_stay_within_budget"
+    name: "Stay Within Budget"
+    description: |
+      Spending MUST stay within budget:
+      - Monthly spend <= budget
+      - Forecast within 10% of budget
+      - No unexpected spikes
+      - Alert on overspend
+    severity: "error"
+    enforcement: "continuous"
+
+  # ============================================================================
+  # Performance
+  # ============================================================================
+
+  - id: "MUST_not_compromise_performance"
+    name: "Do Not Compromise Performance"
+    description: |
+      Cost optimization MUST NOT compromise performance:
+      - SLOs must still be met
+      - Latency targets maintained
+      - Capacity adequate
+      - No degraded user experience
+    severity: "error"
+    enforcement: "pre_optimization"
+
+  # ============================================================================
+  # Savings
+  # ============================================================================
+
+  - id: "MUST_prioritize_savings"
+    name: "Prioritize High-Impact Savings"
+    description: |
+      Savings opportunities MUST be prioritized:
+      - Focus on largest savings first
+      - Quick wins prioritized
+      - Long-term savings over short-term
+      - Consider effort vs. savings
+    severity: "warning"
+    enforcement: "continuous"
+
+  - id: "MUST_track_savings"
+    name: "Track Savings"
+    description: |
+      All savings MUST be tracked:
+      - Document optimization made
+      - Track actual savings
+      - Report monthly
+      - Verify sustained
+    severity: "error"
+    enforcement: "post_optimization"
+
+  # ============================================================================
+  # Analysis
+  # ============================================================================
+
+  - id: "MUST_evaluate_tradeoffs"
+    name: "Evaluate Tradeoffs"
+    description: |
+      Tradeoffs MUST be evaluated before optimization:
+      - Performance impact
+      - Operational complexity
+      - Lock-in risk
+      - Support implications
+    severity: "warning"
+    enforcement: "pre_optimization"
+
+  # ============================================================================
+  # Reporting
+  # ============================================================================
+
+  - id: "MUST_provide_cost_transparency"
+    name: "Provide Cost Transparency"
+    description: |
+      Cost MUST be transparent:
+      - Daily/weekly/monthly reports
+      - By service breakdown
+      - By environment breakdown
+      - Trend analysis
+    severity: "warning"
+    enforcement: "continuous"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

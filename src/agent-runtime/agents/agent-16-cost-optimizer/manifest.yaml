@@ -1,0 +1,75 @@
+# Agent 16 - Cost Optimizer Manifest
+#
+# Agent responsible for cloud cost optimization and resource efficiency.
+
+agent_id: "agent-16-cost-optimizer"
+name: "Cost Optimizer"
+role: "Operations"
+layer: 4
+version: "1.0.0"
+
+description: |
+  Specialized agent for cloud cost optimization, resource efficiency, and FinOps.
+  Analyzes spending, identifies savings opportunities, and implements optimizations.
+
+capabilities:
+  - cost-analysis         # Analyze cloud spending
+  - resource-optimization # Optimize resource usage
+  - savings-identification # Find cost savings
+  - budget-tracking       # Track budgets and forecasts
+  - right-sizing          # Right-size resources
+  - reserved-planning     # Plan reserved capacity
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 2
+
+# Permissions
+permissions:
+  - resource: "cost:*"
+    actions: ["read", "write"]
+  - resource: "resource:*"
+    actions: ["read"]
+  - resource: "budget:*"
+    actions: ["read", "write"]
+  - resource: "billing:*"
+    actions: ["read"]
+
+# Timeout
+300000
+
+# Invariants
+invariants:
+  - "MUST_stay_within_budget"
+  - "MUST_not_compromise_performance"
+  - "MUST_prioritize_savings"
+  - "MUST_track_savings"
+  - "MUST_evaluate_tradeoffs"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-14-sre"
+
+# Events
+event_subscriptions:
+  - "workflow.cost-analysis-requested"
+  - "billing.threshold-exceeded"
+
+event_pubs:
+  - "agent.16.cost-report"
+  - "agent.16.savings-identified"
+  - "agent.16.optimization-complete"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

@@ -1,0 +1,104 @@
+# Agent 32 - Governance Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Evaluation Consistency
+  # ============================================================================
+
+  - id: "MUST_maintain_evaluation_consistency"
+    name: "Maintain Evaluation Consistency"
+    description: |
+      Evaluations MUST be consistent:
+      - Same criteria for all agents
+      - Standardized scoring
+      - Reproducible results
+      - Calibrated metrics
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Track All Evaluations
+  # ============================================================================
+
+  - id: "MUST_track_all_evaluations"
+    name: "Track All Evaluations"
+    description: |
+      All evaluations MUST be tracked:
+      - Complete audit trail
+      - Historical comparison
+      - Trend analysis
+      - Compliance records
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Quality Thresholds
+  # ============================================================================
+
+  - id: "MUST_enforce_quality_thresholds"
+    name: "Enforce Quality Thresholds"
+    description: |
+      Quality thresholds MUST be enforced:
+      - Minimum score requirements
+      - Blocking low-quality outputs
+      - Escalation for failures
+      - Auto-remediation triggers
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Prompt Versioning
+  # ============================================================================
+
+  - id: "MUST_version_prompts"
+    name: "Version Prompts"
+    description: |
+      Prompts MUST be versioned:
+      - Version numbers assigned
+      - Change history tracked
+      - Rollback capability
+      - A/B testing support
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Violation Reporting
+  # ============================================================================
+
+  - id: "MUST_report_violations"
+    name: "Report Violations"
+    description: |
+      Policy violations MUST be reported:
+      - Immediate alerting
+      - Complete documentation
+      - Root cause tracking
+      - Resolution verification
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Audit Trail
+  # ============================================================================
+
+  - id: "MUST_maintain_audit_trail"
+    name: "Maintain Audit Trail"
+    description: |
+      Audit trail MUST be maintained:
+      - All actions logged
+      - Immutable records
+      - Retention policies
+      - Retrieval capability
+    severity: "error"
+    enforcement: "always"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

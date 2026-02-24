@@ -1,0 +1,102 @@
+# Agent 27 - Feedback Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Comprehensive Analysis
+  # ============================================================================
+
+  - id: "MUST_analyze_all_feedback"
+    name: "Analyze All Feedback"
+    description: |
+      All feedback MUST be analyzed:
+      - Every feedback entry processed
+      - Sentiment extracted
+      - Categories identified
+      - Actionability assessed
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Anonymity Protection
+  # ============================================================================
+
+  - id: "MUST_protect_feedback_anonymity"
+    name: "Protect Feedback Anonymity"
+    description: |
+      Feedback anonymity MUST be protected:
+      - No PII in analysis outputs
+      - Aggregate reporting only
+      - Individual responses confidential
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # NPS Accuracy
+  # ============================================================================
+
+  - id: "MUST_track_nps_accurately"
+    name: "Track NPS Accurately"
+    description: |
+      NPS MUST be tracked accurately:
+      - Correct scoring methodology
+      - Proper segmentation
+      - Historical tracking
+      - Benchmark comparisons
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Urgent Issue Detection
+  # ============================================================================
+
+  - id: "MUST_detect_urgent_issues"
+    name: "Detect Urgent Issues"
+    description: |
+      Urgent issues MUST be flagged immediately:
+      - Negative sentiment spikes
+      - Churn signals
+      - Product defects reported
+      - Critical complaints
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # History Maintenance
+  # ============================================================================
+
+  - id: "MUST_maintain_feedback_history"
+    name: "Maintain Feedback History"
+    description: |
+      Feedback history MUST be maintained:
+      - Complete audit trail
+      - Historical analysis capability
+      - Trend identification
+    severity: "warning"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Cross-Channel Aggregation
+  # ============================================================================
+
+  - id: "MUST_aggregate_across_channels"
+    name: "Aggregate Across Channels"
+    description: |
+      Feedback MUST be aggregated across all channels:
+      - Support tickets
+      - Surveys
+      - Social media
+      - Reviews
+    severity: "warning"
+    enforcement: "on_action"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

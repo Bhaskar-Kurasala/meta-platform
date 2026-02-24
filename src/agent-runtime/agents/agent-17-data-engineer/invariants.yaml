@@ -1,0 +1,107 @@
+# Agent 17 - Data Engineer Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Data Versioning
+  # ============================================================================
+
+  - id: "MUST_version_datasets"
+    name: "Version All Datasets"
+    description: |
+      All datasets MUST be versioned using DVC:
+      - Track input datasets
+      - Track output datasets
+      - Record pipeline versions
+      - Enable reproducibility
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Documentation
+  # ============================================================================
+
+  - id: "MUST_document_data_schema"
+    name: "Document Data Schemas"
+    description: |
+      All data schemas MUST be documented:
+      - Field definitions
+      - Data types
+      - Constraints
+      - Relationships
+      - Update frequency
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Error Handling
+  # ============================================================================
+
+  - id: "MUST_handle_failures_gracefully"
+    name: "Handle Pipeline Failures Gracefully"
+    description: |
+      Pipelines MUST handle failures gracefully:
+      - Implement retry logic
+      - Dead letter queues
+      - Error notifications
+      - Idempotent operations
+      - Partial failure handling
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Data Safety
+  # ============================================================================
+
+  - id: "NEVER_lose_data"
+    name: "Never Lose Data"
+    description: |
+      Data pipelines MUST never lose data:
+      - Transactional guarantees
+      - Checkpointing
+      - At-least-once delivery
+      - Data validation at checkpoints
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Schema Evolution
+  # ============================================================================
+
+  - id: "MUST_validate_schema_compatibility"
+    name: "Validate Schema Compatibility"
+    description: |
+      Schema changes MUST be validated:
+      - Backward compatibility checks
+      - Forward compatibility checks
+      - Migration scripts for breaking changes
+      - Rollback plans
+    severity: "error"
+    enforcement: "pre_commit"
+
+  # ============================================================================
+  # Observability
+  # ============================================================================
+
+  - id: "MUST_log_data_quality_metrics"
+    name: "Log Data Quality Metrics"
+    description: |
+      All pipelines MUST log quality metrics:
+      - Record counts
+      - Null percentages
+      - Duplicate rates
+      - Processing times
+      - Error rates
+    severity: "warning"
+    enforcement: "pre_commit"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

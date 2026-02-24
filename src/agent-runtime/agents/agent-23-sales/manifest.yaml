@@ -1,0 +1,73 @@
+# Agent 23 - Sales Manifest
+#
+# Agent responsible for sales support, lead qualification, and CRM operations.
+
+agent_id: "agent-23-sales"
+name: "Sales Representative"
+role: "Revenue & Growth"
+layer: 6
+version: "1.0.0"
+
+description: |
+  Specialized agent for sales support, lead qualification, CRM operations,
+  and sales process automation.
+
+capabilities:
+  - lead-qualification  # Qualify sales leads
+  - crm-management     # CRM operations
+  - proposal-creation # Create sales proposals
+  - demo-scheduling   # Schedule product demos
+  - pipeline-tracking # Track sales pipeline
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 5
+
+# Permissions
+permissions:
+  - resource: "crm:*"
+    actions: ["read", "write"]
+  - resource: "email:*"
+    actions: ["write"]
+  - resource: "sales:*"
+    actions: ["read", "write"]
+
+# Timeout
+timeout: 300000
+
+# Invariants
+invariants:
+  - "MUST_qualify_leads_before_pursuit"
+  - "MUST_log_all_interactions"
+  - "MUST_follow_sales_methodology"
+  - "NEVER_commit_without_approval"
+  - "MUST_maintain_pipeline_accuracy"
+  - "MUST_comply_with_compliance"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-01-customer-discovery"
+
+# Events
+event_subscriptions:
+  - "agent.01.analysis-complete"
+  - "workflow.sales-support-needed"
+
+event_pubs:
+  - "agent.23.lead-qualified"
+  - "sales.proposal.sent"
+  - "sales.opportunity.updated"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

@@ -1,0 +1,104 @@
+# Agent 29 - Analytics Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Correct Aggregation
+  # ============================================================================
+
+  - id: "MUST_use_correct_aggregation"
+    name: "Use Correct Aggregation"
+    description: |
+      Analytics MUST use correct aggregation methods:
+      - Proper time window selection
+      - Accurate metric calculations
+      - Correct rollup functions
+      - Consistent grouping
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Data Anonymization
+  # ============================================================================
+
+  - id: "MUST_anonymize_user_data"
+    name: "Anonymize User Data"
+    description: |
+      User data in analytics MUST be anonymized:
+      - No PII in reports
+      - User IDs hashed
+      - Aggregated views only
+      - Privacy preserved
+    severity: "error"
+    enforcement: "always"
+
+  # ============================================================================
+  # Data Integrity
+  # ============================================================================
+
+  - id: "MUST_maintain_data_integrity"
+    name: "Maintain Data Integrity"
+    description: |
+      Data integrity MUST be maintained:
+      - Source verification
+      - Schema validation
+      - Null handling
+      - Outlier detection
+    severity: "error"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Actionable Insights
+  # ============================================================================
+
+  - id: "MUST_provide_actionable_insights"
+    name: "Provide Actionable Insights"
+    description: |
+      Analytics MUST provide actionable insights:
+      - Clear recommendations
+      - Quantified impact
+      - Prioritized actions
+      - Next steps defined
+    severity: "warning"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Methodology Documentation
+  # ============================================================================
+
+  - id: "MUST_document_methodology"
+    name: "Document Methodology"
+    description: |
+      Analysis methodology MUST be documented:
+      - Data sources
+      - Calculations used
+      - Assumptions made
+      - Limitations acknowledged
+    severity: "warning"
+    enforcement: "on_action"
+
+  # ============================================================================
+  # Statistical Significance
+  # ============================================================================
+
+  - id: "MUST_flag_statistical_significance"
+    name: "Flag Statistical Significance"
+    description: |
+      Results MUST flag statistical significance:
+      - Confidence intervals
+      - P-values where applicable
+      - Sample size considerations
+      - Effect size reporting
+    severity: "error"
+    enforcement: "on_action"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true

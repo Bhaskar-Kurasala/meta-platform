@@ -1,0 +1,77 @@
+# Agent 26 - Support Manifest
+#
+# Agent responsible for technical support, ticket resolution, and triage.
+
+agent_id: "agent-26-support"
+name: "Technical Support Agent"
+role: "Revenue & Growth"
+layer: 6
+version: "1.0.0"
+
+description: |
+  Specialized agent for technical support, ticket triage, categorization,
+  routing, and resolution assistance.
+
+capabilities:
+  - ticket-triage        # Classify and prioritize tickets
+  - ticket-routing       # Route to appropriate teams
+  - issue-diagnosis     # Help diagnose technical issues
+  - resolution-assist   # Guide through solutions
+  - knowledge-lookup    # Find relevant KB articles
+
+# Token budget
+token_budget:
+  input: 80000
+  output: 60000
+
+# Max concurrent tasks
+max_concurrent_tasks: 10
+
+# Permissions
+permissions:
+  - resource: "helpdesk:*"
+    actions: ["read", "write", "update"]
+  - resource: "ticket:*"
+    actions: ["read", "write"]
+  - resource: "knowledgebase:*"
+    actions: ["read"]
+  - resource: "email:*"
+    actions: ["send"]
+
+# Timeout
+timeout: 180000
+
+# Invariants
+invariants:
+  - "MUST_classify_tickets_accurately"
+  - "MUST_prioritize_by_impact"
+  - "MUST_escalate_security_issues"
+  - "MUST_maintain_sla_compliance"
+  - "MUST_protect_customer_data"
+  - "MUST_document_resolutions"
+
+# Dependencies
+dependencies:
+  services:
+    - "memory-service"
+    - "event-bus"
+  agents:
+    - "agent-00-orchestrator"
+    - "agent-25-customer-success"
+    - "agent-32-governance"
+
+# Events
+event_subscriptions:
+  - "ticket.created"
+  - "ticket.updated"
+  - "workflow.support-needed"
+
+event_pubs:
+  - "agent.26.ticket-triaged"
+  - "agent.26.ticket-escalated"
+  - "agent.26.resolution-found"
+
+# Metadata
+author: "Platform Team"
+created_at: "2026-01-01"
+last_updated: "2026-02-24"

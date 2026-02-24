@@ -1,0 +1,89 @@
+# Agent 05 - Business Analyst Invariants
+#
+# Non-negotiable rules enforced by the Invariants Engine.
+
+invariants:
+  # ============================================================================
+  # Testability
+  # ============================================================================
+
+  - id: "MUST_create_testable_requirements"
+    name: "Create Testable Requirements"
+    description: |
+      All requirements MUST be testable:
+      - Specific, measurable conditions
+      - Clear pass/fail criteria
+      - Testable scenarios defined
+      - Edge cases considered
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # API Contracts
+  # ============================================================================
+
+  - id: "MUST_validate_api_contracts"
+    name: "Validate API Contracts"
+    description: |
+      All API contracts MUST be valid:
+      - Valid OpenAPI 3.0 schema
+      - All endpoints documented
+      - Request/response schemas defined
+      - Error codes specified
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Dependencies
+  # ============================================================================
+
+  - id: "MUST_document_dependencies"
+    name: "Document All Dependencies"
+    description: |
+      All requirements MUST document dependencies:
+      - External API dependencies
+      - Internal service dependencies
+      - Data dependencies
+      - Infrastructure requirements
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Clarity
+  # ============================================================================
+
+  - id: "NEVER_ambiguous_requirements"
+    name: "Never Use Ambiguous Requirements"
+    description: |
+      Strict prohibition on ambiguity:
+      - No "etc." or "and so on"
+      - No undefined terms
+      - No subjective language
+      - All nouns and verbs specific
+    severity: "error"
+    enforcement: "pre_output"
+
+  # ============================================================================
+  # Completeness
+  # ============================================================================
+
+  - id: "MUST_cover_all_branches"
+    name: "Cover All Code Paths"
+    description: |
+      Requirements MUST cover:
+      - Happy path
+      - Error conditions
+      - Edge cases
+      - Recovery scenarios
+    severity: "warning"
+    enforcement: "pre_output"
+
+# ============================================================================
+# Global Enforcement Configuration
+# ============================================================================
+
+enforcement_config:
+  fail_on_warning: false
+  log_violations: true
+  metrics_enabled: true
+  alert_on_error: true
